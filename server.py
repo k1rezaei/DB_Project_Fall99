@@ -1,7 +1,6 @@
 import psycopg2
 from psycopg2 import Error
-
-my_password = ''
+from Login import my_database, my_password
 
 if __name__ == '__main__':
     print("hello world")
@@ -9,7 +8,7 @@ if __name__ == '__main__':
         connection = psycopg2.connect(user="postgres",
                                       password=my_password,
                                       host="127.0.0.1",
-                                      database="edu")
+                                      database=my_database)
         cursor = connection.cursor()
         # Print PostgreSQL details
         print("PostgreSQL server information")
