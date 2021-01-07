@@ -2,11 +2,11 @@ import psycopg2
 from psycopg2 import Error
 
 
-def execute_create_query(cursor, query, table_name):
+def execute_create_table_query(cursor, query, table_name):
     try:
         cursor.execute(query)
     except (Exception, Error) as error:
-        print("Error While Creating " + table_name, error)
+        print("Error While Creating(Table) " + table_name, error)
 
 
 def create_customer(cursor):
@@ -14,7 +14,7 @@ def create_customer(cursor):
             'NC varchar(10),firstName varchar(15),' \
             'lastName varchar(15), money real,' \
             'primary key (NC));'
-    execute_create_query(cursor, query, 'CUSTOMER')
+    execute_create_table_query(cursor, query, 'CUSTOMER')
 
 
 def create_comment(cursor):
@@ -22,7 +22,7 @@ def create_comment(cursor):
             'customerNC varchar(10),commentNO varchar(10),text varchar,' \
             'primary key (customerNC, commentNo),' \
             'foreign key (customerNC) references CUSTOMER(NC));'
-    execute_create_query(cursor, query, 'COMMENT')
+    execute_create_table_query(cursor, query, 'COMMENT')
 
 
 def create_employee(cursor):
@@ -30,7 +30,7 @@ def create_employee(cursor):
             'code varchar(10), name varchar(20), jobType varchar(10),' \
             'employment_year varchar(4), salary real, totalSalary real,' \
             'primary key (code));'
-    execute_create_query(cursor, query, 'EMPLOYEE')
+    execute_create_table_query(cursor, query, 'EMPLOYEE')
 
 
 def create_travel(cursor):
@@ -41,7 +41,7 @@ def create_travel(cursor):
             'primary key (code),' \
             'foreign key(airplaneCode) references AIRPLANE(code),' \
             'foreign key (captainCode) references EMPLOYEE(code));'
-    execute_create_query(cursor, query, 'TRAVEL')
+    execute_create_table_query(cursor, query, 'TRAVEL')
 
 
 def create_flight_crew(cursor):
@@ -50,4 +50,4 @@ def create_flight_crew(cursor):
             'primary key(employeeCode, travelCode),' \
             'foreign key (employeeCode) references EMPLOYEE(code),' \
             'foreign key (travelCode) references TRAVEL(code));'
-    execute_create_query(cursor, query, 'FLIGHT_CREW')
+    execute_create_table_query(cursor, query, 'FLIGHT_CREW')
