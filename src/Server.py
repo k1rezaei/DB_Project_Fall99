@@ -12,6 +12,7 @@ class Terminal:
     def __init__(self, cursor):
         self.cursor = cursor
         self.current_username = ""
+        self.current_NC = None  # it must be a string
         self.is_manager = False
 
     def execute_database_query(self, query):
@@ -64,7 +65,7 @@ class Terminal:
 
     def user_main(self):
         Terminal.fancy_print("Welcome back " + self.current_username + "!", "Choose one of theese options:"
-                             , "[1] Offers!"
+                             , "[1] Your discounts"
                              , "[2] Budget"
                              , "[3] Flights"
                              , "[4] Your flights"
@@ -72,7 +73,7 @@ class Terminal:
                              , "[6] Contact to manager")
         query = int(input())
         if query == 1:
-            self.user_offers()
+            self.user_discounts()
         elif query == 2:
             self.user_budget()
         elif query == 3:
@@ -84,8 +85,20 @@ class Terminal:
         elif query == 6:
             self.user_comment()
 
-    def user_offers(self):
-        pass
+    def user_discounts(self):
+        answer = self.execute_database_query('''
+        select discountNo, percent, expirationTime
+        from DISCOUNT as D
+        where D.customerNc == ''' + self.current_NC + '''
+        and D.orderNo is null
+        and clock_timestamp() > D.expirationTime
+        ''')
+        if len(answer) == 0:
+            Terminal.fancy_print('Nothing to display!')
+        else:
+            print(answer)  # TODO khoshgel kardane khorooji
+
+        self.user_main()
 
     def user_budget(self):
         pass

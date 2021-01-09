@@ -61,7 +61,7 @@ def create_discount(cursor):
     query = '''CREATE TABLE DISCOUNT(
             customerNC varchar(10), discountNo varchar(10), 
             percent real NOT NULL, expirationTime timestamp NOT NULL,
-            orderNo varchar(10) NOT NULL, customerOrderNC varchar (10) NOT NULL,
+            orderNo varchar(10), customerOrderNC varchar (10),
             primary key (customerNC, discountNo),
             foreign key (customerNC) references CUSTOMER(NC),
             foreign key (orderNo, customerOrderNC) references ORDER(orderNo, customerNC));'''
