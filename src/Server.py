@@ -57,7 +57,7 @@ class Terminal:
             return
         self.current_username = username
         Terminal.fancy_print('Your registration completed!', 'Thanks for choosing us!')
-        self.user_main_page()
+        self.user_main()
 
     def login(self):
         pass
