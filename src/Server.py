@@ -53,6 +53,10 @@ class Terminal:
     def login(self):
         pass
 
+    def main_page_manager(self):
+        Terminal.fancy_print('Choose One Of These Services:',
+                             '[1]')
+
 
 if __name__ == '__main__':
     try:

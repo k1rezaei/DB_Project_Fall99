@@ -13,7 +13,7 @@ def create_customer(cursor):
     query = '''CREATE TABLE CUSTOMER(
                 NC varchar(10),firstName varchar(15),
                 lastName varchar(15), money real NOT NULL,
-                CHECK money >= 0,
+                CHECK (money >= 0),
                 primary key (NC));'''
     execute_create_table_query(cursor, query, 'CUSTOMER')
 
@@ -30,8 +30,8 @@ def create_employee(cursor):
     query = '''CREATE TABLE EMPLOYEE(
             code varchar(10), name varchar(20), jobType varchar(10),
             employmentYear varchar(4), salary real NOT NULL, totalSalary real NOT NULL,
-            CHECK salary >= 0,
-            CHECK totalSalary >= 0,
+            CHECK (salary >= 0),
+            CHECK (totalSalary >= 0),
             primary key (code));'''
     execute_create_table_query(cursor, query, 'EMPLOYEE')
 
@@ -41,7 +41,7 @@ def create_travel(cursor):
                 code varchar(10), time timestamp NOT NULL,
                 startCity varchar(10) NOT NULL, targetCity varchar(10) NOT NULL, ticketPrice real NOT NULL,
                 airplaneCode varchar(10) NOT NULL, captainCode varchar (10) NOT NULL,
-                CHECK ticketPrice >= 0,
+                CHECK (ticketPrice >= 0),
                 primary key (code),
                 foreign key(airplaneCode) references AIRPLANE(code),
                 foreign key (captainCode) references EMPLOYEE(code));'''
