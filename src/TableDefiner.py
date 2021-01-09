@@ -28,9 +28,8 @@ def create_comment(cursor):
 def create_employee(cursor):
     query = 'CREATE TABLE EMPLOYEE(' \
             'code varchar(10), name varchar(20), jobType varchar(10),' \
-            'employment_year varchar(4), salary real, totalSalary real,' \
+            'employmentYear varchar(4), salary real, totalSalary real,' \
             'primary key (code));'
-    # TODO employment_year -> employmentYear
     execute_create_table_query(cursor, query, 'EMPLOYEE')
 
 
