@@ -160,7 +160,7 @@ class Terminal:
         if query == 1:
             Terminal.fancy_print("Travel Scoring", "Enter order number:")
             order_no = input()
-            Terminal.fancy_print("Travel " + str(travel_code), "Enter your score:")
+            Terminal.fancy_print("Order " + str(order_no), "Enter your score:")
             score = float(input())
             self.execute_database_query('''
                 update ORDER
