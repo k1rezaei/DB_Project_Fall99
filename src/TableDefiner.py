@@ -60,8 +60,8 @@ def create_flight_crew(cursor):
 def create_discount(cursor):
     query = '''CREATE TABLE DISCOUNT(
             customerNC varchar(10), discountNo varchar(10), 
-            percent real, expirationTime timestamp,
-            orderNo varchar(10), customerOrderNC varchar (10),
+            percent real NOT NULL, expirationTime timestamp NOT NULL,
+            orderNo varchar(10) NOT NULL, customerOrderNC varchar (10) NOT NULL,
             primary key (customerNC, discountNo),
             foreign key (customerNC) references CUSTOMER(NC),
             foreign key (orderNo, customerOrderNC) references ORDER(orderNo, customerNC));'''
@@ -71,9 +71,10 @@ def create_discount(cursor):
 def create_airplane(cursor):
     query = '''CREATE TABLE AIRPLANE(
                 code varchar(10),
-                capacity integer,
-                model varchar(10),
+                capacity integer NOT NULL,
+                model varchar(10) NOT NULL,
                 city varchar(10),
+                check ( capacity > 0 ),
                 primary key (code));'''
     execute_create_table_query(cursor, query, 'AIRPLANE')
 
@@ -90,9 +91,11 @@ def create_seat(cursor):
 def create_order(cursor):
     query = '''CREATE TABLE ORDER(
                 customerNC varchar(10), orderNo varchar(10), 
-                paymentStatus varchar(10), travelCode timestamp,
-                score varchar(10), seatNo varchar(10),
+                paymentStatus varchar(10) NOT NULL, travelCode varchar(10),
+                score real, seatNo varchar(10),
                 airplaneCode varchar(10),
+                check ( score >= 0 ),
+                check ( paymentStatus in('Paid','NotPaid') ),
                 primary key (customerNC, orderNo),
                 foreign key (customerNC) references CUSTOMER(NC),
                 foreign key (travelCode) references TRAVEL(code),
@@ -102,7 +105,7 @@ def create_order(cursor):
 
 def create_account(cursor):
     query = '''CREATE TABLE ACCOUNT(
-                    username varchar(10), password varchar(10), isManager boolean,
+                    username varchar(10) not null, password varchar(10) not null, isManager boolean not null,
                     primary key (username),
                     foreign key (customerNC) references CUSTOMER(NC));'''
     execute_create_table_query(cursor, query, 'ORDER')
