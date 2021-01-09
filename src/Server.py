@@ -101,6 +101,71 @@ class Terminal:
     def user_comment(self):
         pass
 
+    def manager_main(self):
+        Terminal.fancy_print("Welcome back " + self.current_username + "!", "Choose one of these options:"
+                             , '[1] Add new flight'
+                             , '[2] Add/Remove airplane'
+                             , '[3] User\'s comments'
+                             , '[4] Giving discount to users'
+                             , '[5] Customers list'
+                             , '[6] Target city list'
+                             , '[7] Airplanes list in a city'
+                             , '[8] Analyzing scores'
+                             , '[9] See entity lists'
+                             , '[10] Give salary to employees'
+                             )
+        query = int(input())
+        if query == 1:
+            self.manager_add_flight()
+        elif query == 2:
+            self.manager_add_remove_airplane()
+        elif query == 3:
+            self.manager_user_comments()
+        elif query == 4:
+            self.manager_give_discount()
+        elif query == 5:
+            self.manager_customer_list()
+        elif query == 6:
+            self.manager_target_city_list()
+        elif query == 7:
+            self.manager_airplane_list_in_city()
+        elif query == 8:
+            self.manager_scores()
+        elif query == 9:
+            self.manager_entity_lists()
+        elif query == 10:
+            self.manager_give_salaries()
+
+    def manager_add_flight(self):
+        pass
+
+    def manager_add_remove_airplane(self):
+        pass
+
+    def manager_user_comments(self):
+        pass
+
+    def manager_give_discount(self):
+        pass
+
+    def manager_customer_list(self):
+        pass
+
+    def manager_target_city_list(self):
+        pass
+
+    def manager_airplane_list_in_city(self):
+        pass
+
+    def manager_scores(self):
+        pass
+
+    def manager_entity_lists(self):
+        pass
+
+    def manager_give_salaries(self):
+        pass
+
 
 if __name__ == '__main__':
     try:
