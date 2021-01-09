@@ -40,13 +40,25 @@ class UserView(ViewDefiner):
         query = '''CREATE VIEW TravelUView (code, time, startCity, targetCity, 
                     ticketPrice, airplaneCode, captainCode)
                     AS SELECT * FROM TRAVEL;'''
-        self.execute_create_view_query(self, query, 'TravelUView')
+        self.execute_create_view_query(query, 'TravelUView')
 
-    def create_view_airplane_score(self):  # TODO
-        pass
+    def create_view_airplane_score(self):
+        query = '''CREATE VIEW AirplaneScoreUView (airplaneCode, avgScore)
+                    AS SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER AS O
+                    WHERE A.code = O.airplaneCode
+                    GROUP BY A.code;
+                '''
+        self.execute_create_view_query(query, 'AirplaneScoreUView')
 
-    def create_view_travel_empty_seat(self):  # TODO
-        pass
+    def create_view_travel_empty_seat(self):
+        query = '''CREATE VIEW TravelEmptySeatUView (travelCode, seatNo, airplaneCode)
+                    AS ((SELECT T.code AS travelCode, A.seatNo AS seatNo, A.airplaneCode AS airplaneCode
+                        FROM TRAVEL AS T, AIRPLANE AS A 
+                        WHERE T.airplaneCode = A.code)
+                        except
+                        (SELECT travelCode, seatNo, airplaneCode FROM ORDER));
+                '''
+        self.execute_create_view_query(query, 'TravelEmptySeatUView')
 
 
 class ManagerView(ViewDefiner):
