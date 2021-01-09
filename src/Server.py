@@ -1,10 +1,10 @@
 import psycopg2
 from psycopg2 import Error
 from Login import my_database, my_password
+import ManagerQueries
 
 
 def execute_data_base_query(cursor, query):
-    cursor.execute(query)
     return cursor.fetchall()
 
 
@@ -174,13 +174,82 @@ class Terminal:
             self.manager_give_salaries()
 
     def manager_add_flight(self):
-        pass
+        all_flights = self.execute_database_query(ManagerQueries.get_all_flight_query())
+        new_code = len(all_flights)
+        Terminal.fancy_print('Enter Following Information:',
+                             'Time (YYYY-MM-DD HH:MM:SS)',
+                             'Starting city',
+                             'Target city',
+                             'Ticket price',
+                             'Airplane code',
+                             'Captain code')
+        time = input()
+        starting_city = input()
+        target_city = input()
+        ticket_price = int(input())
+        airplane_code = int(input())
+        captain_code = int(input())
+
+        try:
+            self.execute_database_query(ManagerQueries.get_add_flight_query(new_code, time, starting_city, target_city,
+                                                                            ticket_price, airplane_code, captain_code))
+            print("Flight added successfully!")
+        except (Exception, Error) as error:
+            print("Error while inserting new flight", error)
+
+        self.manager_back_to_main()
+
+    def manager_back_to_main(self):
+        print("Press Y to go back!")
+        tmp = input()
+        self.manager_main()
+
+    def manager_add_airplane(self):
+        all_airplanes = self.execute_database_query(ManagerQueries.get_all_airplanes_query())
+        new_code = len(all_airplanes)
+        Terminal.fancy_print('Enter following information:',
+                             'Capacity', 'Model', 'CIty')
+        cap = int(input())
+        model = input()
+        city = input()
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_add_airplane_query(new_code, cap, model, city))
+            print("Airplane added successfully!")
+        except (Exception, Error) as error:
+            print("Error while inserting new airplane", error)
+
+        self.manager_back_to_main()
+
+    def manager_remove_airplane(self):
+        Terminal.fancy_print('Enter airplane\'s code')
+        code = int(input())
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_remove_airplane_query(code))
+            print("Airplane removed successfully!")
+        except (Exception, Error) as error:
+            print("Error while removing airplane", error)
+
+        self.manager_back_to_main()
 
     def manager_add_remove_airplane(self):
-        pass
+        Terminal.fancy_print("[1] Add an airplane", '[2] Remove airplane')
+        query = int(input())
+        if query == 1:
+            self.manager_add_airplane()
+        else:
+            self.manager_remove_airplane()
 
     def manager_user_comments(self):
-        pass
+        try:
+            all_comments = self.execute_database_query(
+                ManagerQueries.get_all_comments_query())
+            print(all_comments)
+        except (Exception, Error) as error:
+            print("Error while fetching comments", error)
+
+        self.manager_back_to_main()
 
     def manager_give_discount(self):
         pass
