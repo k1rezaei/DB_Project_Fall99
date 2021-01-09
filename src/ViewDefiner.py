@@ -110,3 +110,19 @@ class ManagerView(ViewDefiner):
                     AS SELECT * FROM FLIGHT_CREW;'''
         self.execute_create_view_query(query, 'TravelMView')
 
+    def create_view_airplane_score(self):
+        query = '''CREATE VIEW AirplaneScoreMView (airplaneCode, avgScore)
+                    AS SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER AS O
+                    WHERE A.code = O.airplaneCode
+                    GROUP BY A.code;
+                '''
+        self.execute_create_view_query(query, 'AirplaneScoreMView')
+
+    def create_view_employee_score(self):
+        query = '''CREATE VIEW EmployeeScoreMView (airplaneCode, avgScore)
+                    AS SELECT E.code, AVG(O.score) 
+                    FROM EMPLOYEE AS E, ORDER AS O
+                    WHERE E.code = O.airplaneCode
+                    GROUP BY E.code;
+                '''
+        self.execute_create_view_query(query, 'EmployeeScoreMView')

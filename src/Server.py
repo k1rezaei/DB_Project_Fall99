@@ -5,7 +5,7 @@ import ManagerQueries
 
 
 def execute_data_base_query(cursor, query):
-    cursor.execute(query)
+    return cursor.fetchall()
 
 
 class Terminal:
@@ -15,8 +15,7 @@ class Terminal:
         self.is_manager = False
 
     def execute_database_query(self, query):
-        execute_data_base_query(self.cursor, query)
-        return 1 # TODO
+        return execute_data_base_query(self.cursor, query)
 
     @staticmethod
     def fancy_print(*strings):
