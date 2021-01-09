@@ -118,7 +118,7 @@ class Terminal:
             new_money = money + amount_of_money
             self.execute_database_query('''
                 update CUSTOMER
-                set money='''+str(new_money)+'''
+                set money=''' + str(new_money) + '''
                 from CUSTOMER as C
                 where C.customerNc == ''' + self.current_NC + '''
                 ;''')
@@ -127,16 +127,95 @@ class Terminal:
             self.user_main()
 
     def user_all_flights(self):
-        pass
+        answer = self.execute_database_query('''
+            select *
+            from TRAVEL as T
+            where clock_timestamp() < T.time;
+            ''')
+        if len(answer) == 0:
+            Terminal.fancy_print('Nothing to display!')
+        else:
+            print(answer)  # TODO khoshgel kardane khorooji
 
-    def user_personal_flights(self):
-        pass
+        self.user_main()
+
+    def user_personal_past_flights(self):
+        answer = self.execute_database_query('''
+            select T.code, T.time, T.startingCity, T.targetCity, 
+                    T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
+            from TRAVEL as T, ORDER as O
+            where clock_timestamp() >= T.time
+            and O.travelCode = T.code
+            and O.customerNC = "''' + self.current_NC + '''"
+            ;''')
+        if len(answer) == 0:
+            Terminal.fancy_print('Nothing to display!')
+        else:
+            print(answer)  # TODO khoshgel kardane khorooji
+
+        Terminal.fancy_print("Choose one of theese options:",
+                             "[1] Score a travel",
+                             "[2] Back to main menu")
+        query = int(input())
+        if query == 1:
+            Terminal.fancy_print("Travel Scoring", "Enter order number:")
+            order_no = input()
+            Terminal.fancy_print("Travel " + str(travel_code), "Enter your score:")
+            score = float(input())
+            self.execute_database_query('''
+                update ORDER
+                set score=''' + str(score) + '''
+                where customerNC ="''' + self.current_NC + '''"
+                and orderNo="''' + order_no + '''";
+            ''')
+            self.user_personal_past_flights()
+        else:
+            self.user_main()
+
+    def user_personal_future_flights(self):
+        answer = self.execute_database_query('''
+                select T.code, T.time, T.startingCity, T.targetCity, 
+                        T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
+                from TRAVEL as T, ORDER as O
+                where clock_timestamp() < T.time
+                and O.travelCode = T.code
+                and O.customerNC = "''' + self.current_NC + '''"
+                ;''')
+        if len(answer) == 0:
+            Terminal.fancy_print('Nothing to display!')
+        else:
+            print(answer)  # TODO khoshgel kardane khorooji
+
+        Terminal.fancy_print("Choose one of theese options:",
+                             "[1] Cancel a travel",
+                             "[2] Back to main menu")
+        query = int(input())
+        if query == 1:
+            Terminal.fancy_print("Travel cancelation", "Enter travel code:")
+            # TODO sakhte injash :))
+            self.user_personal_future_flights()
+        else:
+            self.user_main()
 
     def user_buy_ticket(self):
         pass
 
     def user_comment(self):
         pass
+
+    def user_personal_flights(self):
+        Terminal.fancy_print("Choose one of these options:"
+                             , '[1] Past flights'
+                             , '[2] Future flights'
+                             , '[3] Back to main menu'
+                             )
+        query = int(input())
+        if query == 1:
+            self.user_personal_past_flights()
+        elif query == 2:
+            self.user_personal_future_flights()
+        else:
+            self.user_main()
 
     def manager_main(self):
         Terminal.fancy_print("Welcome back " + self.current_username + "!", "Choose one of these options:"
