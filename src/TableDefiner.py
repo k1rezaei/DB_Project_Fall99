@@ -20,7 +20,7 @@ def create_customer(cursor):
 
 def create_comment(cursor):
     query = '''CREATE TABLE COMMENT(
-                customerNC varchar(10),commentNO varchar(10),text varchar,
+                customerNC varchar(10),commentNO varchar(10),text varchar(300),
                 primary key (customerNC, commentNo),
                 foreign key (customerNC) references CUSTOMER(NC));'''
     execute_create_table_query(cursor, query, 'COMMENT')

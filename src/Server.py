@@ -198,10 +198,31 @@ class Terminal:
             self.user_main()
 
     def user_buy_ticket(self):
-        pass
+        Terminal.fancy_print("Enter travel code:")
+        travel_code = input()
+        # TODO
 
     def user_comment(self):
-        pass
+        Terminal.fancy_print("Enter your comment number:")
+        comment_number = input()
+        Terminal.fancy_print("Write your comment:"
+                             , "End your comment with a line with only a dot")
+        comment = [input()]
+        while comment[-1] != '.':
+            comment.append(input())
+
+        comment = comment[:-1]
+        # TODO in doroste too postgresql? injori enter mizanan?
+        query_comment = ''
+        for c in comment:
+            query_comment += c
+            query_comment += '\\n'
+
+        self.execute_database_query('''
+            insert into COMMENT values ("''' + self.current_NC + '''"
+            , "''' + comment_number + '''"
+            , "''' + query_comment + '''")
+        ''')
 
     def user_personal_flights(self):
         Terminal.fancy_print("Choose one of these options:"
