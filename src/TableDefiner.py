@@ -95,3 +95,11 @@ def create_order(cursor):
                 foreign key (travelCode) references TRAVEL(code),
                 foreign key (airplaneCode, seatNo) references SEAT(airplaneCode,seatNo));'''
     execute_create_table_query(cursor, query, 'ORDER')
+
+
+def create_account(cursor):
+    query = '''CREATE TABLE ACCOUNT(
+                    username varchar(10), password varchar(10), isManager boolean,
+                    primary key (username),
+                    foreign key (customerNC) references CUSTOMER(NC));'''
+    execute_create_table_query(cursor, query, 'ORDER')

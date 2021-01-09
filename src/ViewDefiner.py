@@ -91,3 +91,4 @@ class ManagerView(ViewDefiner):
         query = '''CREATE VIEW FlightCrewMView (employeeCode, travelCode)
                     AS SELECT * FROM FLIGHT_CREW;'''
         self.execute_create_view_query(query, 'TravelMView')
+
