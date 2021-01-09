@@ -87,12 +87,12 @@ class Terminal:
 
     def user_discounts(self):
         answer = self.execute_database_query('''
-        select discountNo, percent, expirationTime
-        from DISCOUNT as D
-        where D.customerNc == ''' + self.current_NC + '''
-        and D.orderNo is null
-        and clock_timestamp() > D.expirationTime
-        ''')
+            select discountNo, percent, expirationTime
+            from DISCOUNT as D
+            where D.customerNc == ''' + self.current_NC + '''
+            and D.orderNo is null
+            and clock_timestamp() > D.expirationTime;
+            ''')
         if len(answer) == 0:
             Terminal.fancy_print('Nothing to display!')
         else:
@@ -101,7 +101,30 @@ class Terminal:
         self.user_main()
 
     def user_budget(self):
-        pass
+        answer = self.execute_database_query('''
+            select money
+            from CUSTOMER as C
+            where C.customerNc == "''' + self.current_NC + '''"
+            ;''')
+        money = answer[0][0]
+        Terminal.fancy_print("Your wallet: " + str(money) + "$", "Choose one of theese options:"
+                             , "[1] Add money to your wallet (don't worry in this version, it's completely free"
+                             , "    but PLEASE don't overuse this option)"
+                             , "[2] Back to main menu")
+        query = int(input())
+        if query == 1:
+            Terminal.fancy_print("Amount of money you want to pay:")
+            amount_of_money = int(input())
+            new_money = money + amount_of_money
+            self.execute_database_query('''
+                update CUSTOMER
+                set money='''+str(new_money)+'''
+                from CUSTOMER as C
+                where C.customerNc == ''' + self.current_NC + '''
+                ;''')
+            self.user_budget()
+        else:
+            self.user_main()
 
     def user_all_flights(self):
         pass
