@@ -70,7 +70,8 @@ class Terminal:
                              , "[3] Flights"
                              , "[4] Your flights"
                              , "[5] Buy ticket"
-                             , "[6] Contact to manager")
+                             , "[6] Contact to manager"
+                             , "[7] logout")
         query = int(input())
         if query == 1:
             self.user_discounts()
@@ -84,6 +85,11 @@ class Terminal:
             self.user_buy_ticket()
         elif query == 6:
             self.user_comment()
+        else:
+            self.current_username = None
+            self.current_NC = None
+            self.is_manager = False
+            self.start()
 
     def user_discounts(self):
         answer = self.execute_database_query('''
