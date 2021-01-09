@@ -29,7 +29,6 @@ class Terminal:
         print(border * (maxi + 6))
 
     def start(self):
-        self.user_main_page()
         Terminal.fancy_print("Welcome!", "Choose one of theese options:"
                              , "[1] Register"
                              , "[2] Login"
