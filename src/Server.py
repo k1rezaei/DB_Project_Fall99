@@ -306,7 +306,7 @@ class Terminal:
         self.manager_back_to_main()
 
     def manager_back_to_main(self):
-        print("Press Y to go back!")
+        print("----------\nPress Y to go back!")
         tmp = input()
         self.manager_main()
 
@@ -358,16 +358,56 @@ class Terminal:
         self.manager_back_to_main()
 
     def manager_give_discount(self):
-        pass
+        Terminal.fancy_print('Enter user\'s NC', 'Discount No',
+                             'Discount Percent', 'Expiration time (YYYY-MM-DD HH:MM:SS)')
+
+        nc = input()
+        discount_no = input()
+        percent = int(input())
+        expiration_time = input()
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_add_discount_query(nc, discount_no,
+                                                      percent, expiration_time))
+            print('Giving discount successful')
+        except (Exception, Error) as error:
+            print("Error while inserting discount", error)
+
+        self.manager_back_to_main()
 
     def manager_customer_list(self):
-        pass
+        try:
+            all_customers = self.execute_database_query(
+                ManagerQueries.get_all_customers_query())
+
+            print(all_customers) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching customers", error)
+
+        self.manager_back_to_main()
 
     def manager_target_city_list(self):
-        pass
+        try:
+            cities = self.execute_database_query(
+                ManagerQueries.get_target_city_query())
+
+            print(cities) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching target city data", error)
+
+        self.manager_back_to_main()
 
     def manager_airplane_list_in_city(self):
-        pass
+        Terminal.fancy_print("Enter city name:")
+        city = input()
+        try:
+            airplanes = self.execute_database_query(
+                ManagerQueries.get_airplanes_in_city_query(city))
+            print(airplanes) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching airplanes", error)
+
+        self.manager_back_to_main()
 
     def manager_scores(self):
         pass
@@ -376,7 +416,14 @@ class Terminal:
         pass
 
     def manager_give_salaries(self):
-        pass
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_give_salary_query())
+            print("Giving salaries successful")
+        except (Exception, Error) as error:
+            print("Error while giving salaries", error)
+
+        self.manager_back_to_main()
 
 
 if __name__ == '__main__':
