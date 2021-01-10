@@ -250,7 +250,7 @@ class Terminal:
                              , '[2] Add/Remove airplane'
                              , '[3] User\'s comments'
                              , '[4] Giving discount to users'
-                             , '[5] Customers list'
+                             , '[5] Customers list based on number of travels'
                              , '[6] Target city list'
                              , '[7] Airplanes list in a city'
                              , '[8] Analyzing scores'
@@ -267,7 +267,7 @@ class Terminal:
         elif query == 4:
             self.manager_give_discount()
         elif query == 5:
-            self.manager_customer_list()
+            self.manager_customer_list_by_travels()
         elif query == 6:
             self.manager_target_city_list()
         elif query == 7:
@@ -375,17 +375,6 @@ class Terminal:
 
         self.manager_back_to_main()
 
-    def manager_customer_list(self):
-        try:
-            all_customers = self.execute_database_query(
-                ManagerQueries.get_all_customers_query())
-
-            print(all_customers) # TODO print?
-        except (Exception, Error) as error:
-            print("Error while fetching customers", error)
-
-        self.manager_back_to_main()
-
     def manager_target_city_list(self):
         try:
             cities = self.execute_database_query(
@@ -409,11 +398,117 @@ class Terminal:
 
         self.manager_back_to_main()
 
+    def manager_score_employees(self):
+        try:
+            employees = self.execute_database_query(
+                ManagerQueries.get_employee_score_query())
+            print(employees) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching employees\' scores", error)
+
+        self.manager_back_to_main()
+
+    def manger_score_airplanes(self):
+        try:
+            airplanes = self.execute_database_query(
+                ManagerQueries.get_airplane_score_query())
+            print(airplanes) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching airplanes\' scores", error)
+
+        self.manager_back_to_main()
+
+    def manager_score_captains(self):
+        try:
+            captains = self.execute_database_query(
+                ManagerQueries.get_captains_score_query())
+            print(captains) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching captains\' scores", error)
+
+        self.manager_back_to_main()
+
     def manager_scores(self):
-        pass
+        Terminal.fancy_print('[1] See employees\' scores',
+                             '[2] See airplanes\' scores',
+                             '[3] See captains\' scores')
+        query = input()
+        if query == '1':
+            self.manager_score_employees()
+        elif query == '2':
+            self.manger_score_airplanes()
+        else:
+            self.manager_score_captains()
+
+    def manager_customer_list_by_travels(self):
+        try:
+            all_customers = self.execute_database_query(
+                ManagerQueries.get_customers_by_travels())
+
+            print(all_customers) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching customers\' travels", error)
+
+        self.manager_back_to_main()
+
+    def manager_customer_list(self):
+        try:
+            all_customers = self.execute_database_query(
+                ManagerQueries.get_all_customers_query())
+
+            print(all_customers) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching customers", error)
+
+        self.manager_back_to_main()
+
+    def manager_airplane_list(self):
+        try:
+            all_airplanes = self.execute_database_query(
+                ManagerQueries.get_all_airplanes_query())
+
+            print(all_airplanes) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching airplanes", error)
+
+        self.manager_back_to_main()
+
+    def manager_employee_list(self):
+        try:
+            all_employees = self.execute_database_query(
+                ManagerQueries.get_all_employees_query())
+
+            print(all_employees) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching employees", error)
+
+        self.manager_back_to_main()
+
+    def manager_travel_list(self):
+        try:
+            all_travels = self.execute_database_query(
+                ManagerQueries.get_all_travels_query())
+
+            print(all_travels) # TODO print?
+        except (Exception, Error) as error:
+            print("Error while fetching travels", error)
+
+        self.manager_back_to_main()
 
     def manager_entity_lists(self):
-        pass
+        Terminal.fancy_print('[1] See customers',
+                             '[2] See airplanes',
+                             '[3] See employees',
+                             '[4] See travels')
+        query = input()
+        if query == '1':
+            self.manager_customer_list()
+        elif query == '2':
+            self.manager_airplane_list()
+        elif query == '3':
+            self.manager_employee_list()
+        else:
+            self.manager_travel_list()
 
     def manager_give_salaries(self):
         try:
