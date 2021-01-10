@@ -118,6 +118,7 @@ class ManagerView(ViewDefiner):
                 '''
         self.execute_create_view_query(query, 'AirplaneScoreMView')
 
+    # TODO this is wrong! :)
     def create_view_employee_score(self):
         query = '''CREATE VIEW EmployeeScoreMView (airplaneCode, avgScore)
                     AS SELECT E.code, AVG(O.score) 
