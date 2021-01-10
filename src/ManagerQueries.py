@@ -47,7 +47,8 @@ def get_customers_by_travels():
     query = '''SELECT X.nc, X.firstName, X.lastName, count(*)
                 FROM (CUSTOMER as X, ORDER as Y)
                 WHERE Y.customerNC = X.nc
-                GROUP BY X.nc, X.firstName, X.lastName;'''
+                GROUP BY X.nc, X.firstName, X.lastName
+                ORDER BY count(*) DESC;'''
     return query
 
 
@@ -111,3 +112,9 @@ if __name__ == '__main__':
     print(get_target_city_query())
     print(get_airplanes_in_city_query('Tehran'))
     print(get_give_salary_query())
+    print(get_all_employees_query())
+    print(get_all_travels_query())
+    print(get_all_customers_query())
+    print(get_all_airplanes_query())
+    print(get_customers_by_travels())
+    print(get_captains_score_query())
