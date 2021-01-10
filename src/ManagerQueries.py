@@ -33,10 +33,28 @@ def get_all_comments_query():
     return query
 
 
+def get_all_employees_query():
+    query = '''SELECT * FROM EMPLOYEES;'''
+    return query
+
+
+def get_all_travels_query():
+    query = '''SELECT * FROM TRAVEL;'''
+    return query
+
+
+def get_customers_by_travels():
+    query = '''SELECT X.nc, X.firstName, X.lastName, count(*)
+                FROM (CUSTOMER as X, ORDER as Y)
+                WHERE Y.customerNC = X.nc
+                GROUP BY X.nc, X.firstName, X.lastName;'''
+    return query
+
+
 def get_add_discount_query(nc, discount_no, percent, expiration_time):
     query = '''INSERT INTO DISCOUNT (customerNC, discountNo, percent, 
                 expirationTime, orderNo, customerOrderNC) VALUES '''
-    query += '("' + nc + '", "' + discount_no + '", ' + str(percent) +\
+    query += '("' + nc + '", "' + discount_no + '", ' + str(percent) + \
              ', "' + expiration_time + '", null, null);'
     return query
 
@@ -61,6 +79,26 @@ def get_airplanes_in_city_query(city):
 def get_give_salary_query():
     query = '''UPDATE EMPLOYEE SET totalSalary = totalSalary + salary;'''
     return query
+
+
+def get_employee_score_query():
+    query = '''SELECT * from EmployeeScoreMView;'''
+    return query
+
+
+def get_airplane_score_query():
+    query = '''SELECT * FROM AirplaneScoreMView;'''
+    return query
+
+
+# TODO add to views or not?
+def get_captains_score_query():
+    query = '''SELECT X.code, X.name, AVG(Y.score)
+            FROM EMPLOYEE AS X, ORDER AS Y, TRAVEL AS Z
+            WHERE Y.travelCode = Z.code and Z.captainCode = X.code
+            GROUP BY X.code, X.name;'''
+    return query
+
 
 # TODO: change query tables, to view tables! IMPORTANT
 
