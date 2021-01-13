@@ -119,8 +119,6 @@ class UserTerminal(Terminal):
     def change_money(self, toadd_money):
         money = self.get_money()
         new_money = money + toadd_money
-        print("bug: ", new_money)
-        print(self.current_NC)
 
         try:
             self.execute_database_query(self.query_change_money(new_money))
@@ -332,8 +330,7 @@ class UserTerminal(Terminal):
         return '''
                     update CUSTOMER
                     set money=''' + str(new_money) + '''
-                    where CUSTOMER.NC = "''' + self.current_NC + '''
-                    ";'''
+                    where CUSTOMER.NC = "''' + self.current_NC + '''";'''
 
     def query_is_available_discount(self, discount_no):
         return '''
