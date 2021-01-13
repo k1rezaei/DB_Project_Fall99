@@ -31,10 +31,10 @@ def query_travel_price(travel_code):
 
 def query_empty_seats(travel_code):
     return '''
-        select airplaneCode, seatNo
-        from TravelEmptySeatUView as ES
-        where ES.travelCode = "''' + travel_code + '''";
-    '''
+            select airplaneCode, seatNo
+            from TravelEmptySeatUView as ES
+            where ES.travelCode = "''' + travel_code + '''";
+        '''
 
 
 def query_paymet_status(order_no, travel_code):
@@ -43,8 +43,7 @@ def query_paymet_status(order_no, travel_code):
             from ORDER
             where travelCode = "''' + travel_code + '''"
             and orderNo = "''' + order_no + '''"
-            ;
-        '''
+        ;'''
 
 
 def query_discount_percents(order_no, travel_code):
@@ -53,5 +52,4 @@ def query_discount_percents(order_no, travel_code):
                 from DISCOUNT
                 where travelCode = "''' + travel_code + '''"
                 and orderNo = "''' + order_no + '''"
-                ;
-            '''
+            ;'''

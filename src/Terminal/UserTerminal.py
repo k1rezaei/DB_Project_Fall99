@@ -294,8 +294,8 @@ class UserTerminal(Terminal):
         return '''
                     update ORDER
                     set score=''' + str(score) + '''
-                    where customerNC ="''' + self.current_NC + '''"
-                    and orderNo="''' + order_no + '''";
+                    where customerNC = "''' + self.current_NC + '''"
+                    and orderNo = "''' + order_no + '''";
                 '''
 
     def query_personal_past_flights(self):
@@ -314,8 +314,7 @@ class UserTerminal(Terminal):
                     set paymentStatus = "''' + new_status + '''"
                     where customerNC = "''' + self.current_NC + '''"
                     and orderNo = "''' + order_no + '''"
-                    ;
-                '''
+                ;'''
 
     def query_future_flights(self):
         return '''
@@ -337,35 +336,35 @@ class UserTerminal(Terminal):
 
     def query_percent_single_discount(self, discount_no):
         return '''
-                            select percent 
-                            from DISOUNT 
-                            where D.customerNC = "''' + self.current_NC + '''"
-                            and D.discountNo = "''' + discount_no + '''"
-                            ;
-                        '''
+                    select percent 
+                    from DISOUNT 
+                    where D.customerNC = "''' + self.current_NC + '''"
+                    and D.discountNo = "''' + discount_no + '''"
+                    ;
+                '''
 
     def query_use_discount(self, discount_no, order_no):
         return '''
-                            update DISCOUNT as D
-                            set D.customerOrderNC = "''' + self.current_NC + '''"
-                                , D.Order_No = "''' + order_no + '''"
-                            where D.customerNC = "''' + self.current_NC + '''"
-                            and D.discountNo = "''' + discount_no + '''"
-                            ;
-                        '''
+                    update DISCOUNT as D
+                    set D.customerOrderNC = "''' + self.current_NC + '''",
+                        D.Order_No = "''' + order_no + '''"
+                    where D.customerNC = "''' + self.current_NC + '''"
+                    and D.discountNo = "''' + discount_no + '''"
+                    ;
+                '''
 
     def query_set_discount_to_null(self):
         return '''
-                        update DISCOUNT as D
-                        set D.customerOrderNC = null
-                            , D.Order_No = null
-                        where D.customerNC = "''' + self.current_NC + '''"
-                        ;
-                    '''
+                    update DISCOUNT as D
+                    set D.customerOrderNC = null,
+                        D.Order_No = null
+                    where D.customerNC = "''' + self.current_NC + '''"
+                    ;
+                '''
 
     def query_insert_comment(self, comment_number, query_comment):
         return '''
-            insert into COMMENT values ("''' + self.current_NC + '''"
-            , "''' + comment_number + '''"
-            , "''' + query_comment + '''");
+            insert into COMMENT values ("''' + self.current_NC + '''",
+            "''' + comment_number + '''",
+            "''' + query_comment + '''");
         '''
