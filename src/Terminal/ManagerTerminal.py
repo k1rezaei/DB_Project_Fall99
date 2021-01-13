@@ -57,8 +57,8 @@ class ManagerTerminal(Terminal):
         starting_city = input()
         target_city = input()
         ticket_price = int(input())
-        airplane_code = int(input())
-        captain_code = int(input())
+        airplane_code = input()
+        captain_code = input()
 
         try:
             self.execute_database_query(ManagerQueries.get_add_flight_query(str(new_code), time, starting_city, target_city,
@@ -312,3 +312,5 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("inserting employee successful")
         except (Exception, Error) as error:
             print("Error while inserting employee", error)
+
+        self.manager_back_to_main()
