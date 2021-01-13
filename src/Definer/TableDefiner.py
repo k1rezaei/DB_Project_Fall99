@@ -11,7 +11,7 @@ def execute_create_table_query(cursor, query, table_name):
 
 def create_customer(cursor):
     query = '''CREATE TABLE CUSTOMER(
-                NC varchar(10),firstName varchar(15),
+                NC varchar(10), password varchar(10), firstName varchar(15),
                 lastName varchar(15), money real NOT NULL,
                 CHECK (money >= 0),
                 primary key (NC));'''
