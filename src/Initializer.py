@@ -56,8 +56,8 @@ def insert(connection, cursor):
 
         insert into employee values('123', 'Seyed', 'Captain', '1396', 1500, 0);
         insert into employee values('124', 'Keivan', 'Captain', '1396', 1000, 0);
-        insert into employee values('125', 'Hasan Agha', 'Mehmandar', '1396', 10000, 0);
-        insert into employee values('126', 'Mina', 'Mehmandar', '1396', 100000, 0);
+        insert into employee values('125', 'Hasan Agha', 'Mehmandar', '1396', 100, 0);
+        insert into employee values('126', 'Mina', 'Mehmandar', '1396', 100, 0);
 
         insert into travel values('100', '2020-02-21 01:45:00', 'Tehran', 'Mashhad', 6, '210', '123');
         insert into travel values('101', '2021-02-21 01:35:00', 'Tehran', 'Mashhad', 7, '213', '123');
