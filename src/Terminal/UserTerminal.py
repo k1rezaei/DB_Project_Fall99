@@ -13,24 +13,24 @@ class UserTerminal(Terminal):
                              , "[7] logout")
         query = int(input())
         if query == 1:
-            self.user_discounts()
+            self.discounts()
         elif query == 2:
-            self.user_budget()
+            self.budget()
         elif query == 3:
-            self.user_all_flights()
+            self.all_flights()
         elif query == 4:
-            self.user_personal_flights()
+            self.personal_flights()
         elif query == 5:
-            self.user_buy_ticket()
+            self.buy_ticket()
         elif query == 6:
-            self.user_comment()
+            self.comment()
         else:
             self.current_username = None
             self.current_NC = None
             self.is_manager = False
             self.start()
 
-    def user_discounts(self):
+    def discounts2(self):
         answer = self.execute_database_query('''
             select discountNo, percent, expirationTime
             from DISCOUNT as D
@@ -39,19 +39,18 @@ class UserTerminal(Terminal):
             and clock_timestamp() > D.expirationTime;
             ''')
         if len(answer) == 0:
-            Terminal.fancy_print('Nothing to display!')
+            Terminal.fancy_print('No discount to display!')
+            return False
         else:
             print(answer)  # TODO khoshgel kardane khorooji
+            return True
 
+    def discounts(self):
+        self.discounts2()
         self.user_main()
 
-    def user_budget(self):
-        answer = self.execute_database_query('''
-            select money
-            from CUSTOMER as C
-            where C.customerNc == "''' + self.current_NC + '''"
-            ;''')
-        money = answer[0][0]
+    def budget(self):
+        money = self.get_money()
         Terminal.fancy_print("Your wallet: " + str(money) + "$", "Choose one of theese options:"
                              , "[1] Add money to your wallet (don't worry in this version, it's completely free"
                              , "    but PLEASE don't overuse this option)"
@@ -60,23 +59,55 @@ class UserTerminal(Terminal):
         if query == 1:
             Terminal.fancy_print("Amount of money you want to pay:")
             amount_of_money = int(input())
-            new_money = money + amount_of_money
-            self.execute_database_query('''
+            self.change_money(amount_of_money)
+            self.budget()
+        else:
+            self.user_main()
+
+    def change_money(self, toadd_money):
+        money = self.get_money()
+        new_money = money + toadd_money
+        self.execute_database_query('''
                 update CUSTOMER
                 set money=''' + str(new_money) + '''
                 from CUSTOMER as C
                 where C.customerNc == ''' + self.current_NC + '''
                 ;''')
-            self.user_budget()
-        else:
-            self.user_main()
 
-    def user_all_flights(self):
+    def get_money(self):
         answer = self.execute_database_query('''
-            select *
-            from TRAVEL as T
-            where clock_timestamp() < T.time;
-            ''')
+                    select money
+                    from CUSTOMER as C
+                    where C.customerNc == "''' + self.current_NC + '''"
+                    ;''')
+        money = answer[0][0]
+        return money
+
+    def all_flights(self):
+        database_query = '''
+                    select *, (select count(*)
+                                from TravelEmptySeatUView as ES 
+                                where T.code=ES.travelCode
+                    ) as emptySeats
+                    from TRAVEL as T, AirplaneScoreUView as AirS
+                    where clock_timestamp() < T.time
+                    and T.airplaneCode = AirS.airplaneCode
+                    '''
+
+        Terminal.fancy_print("Choose one of theese options:",
+                             "[1] Order by number of empty seats",
+                             "[2] Order by airplane score",
+                             "[3] Order by ticket price")
+        query = int(input())
+        if query == 1:
+            database_query += "order by emptySeats"
+        elif query == 2:
+            database_query += "order by AirS.avgScore"
+        elif query == 3:
+            database_query += "order by T.price"
+
+        answer = self.execute_database_query(database_query)
+
         if len(answer) == 0:
             Terminal.fancy_print('Nothing to display!')
         else:
@@ -119,7 +150,7 @@ class UserTerminal(Terminal):
 
     def user_personal_future_flights(self):
         answer = self.execute_database_query('''
-                select T.code, T.time, T.startingCity, T.targetCity, 
+                select T.code, O.orderNo, T.time, T.startingCity, T.targetCity, 
                         T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
                 from TRAVEL as T, ORDER as O
                 where clock_timestamp() < T.time
@@ -132,22 +163,148 @@ class UserTerminal(Terminal):
             print(answer)  # TODO khoshgel kardane khorooji
 
         Terminal.fancy_print("Choose one of theese options:",
-                             "[1] Cancel a travel",
+                             "[1] Cancel an order",
                              "[2] Back to main menu")
         query = int(input())
         if query == 1:
             Terminal.fancy_print("Travel cancelation", "Enter travel code:")
-            # TODO sakhte injash :))
+            travel_code = input()
+
+            Terminal.fancy_print("Enter order number")
+            order_no = input()
+
+            paymentStatus = self.execute_database_query('''
+                select paymentStatus 
+                from ORDER
+                where travelCode = "''' + travel_code + '''"
+                and orderNo = "''' + order_no + '''"
+                ;
+            ''')[0][0]
+            if paymentStatus == 'Paid':
+                price = self.get_travel_price(travel_code)
+
+                discounts = self.execute_database_query('''
+                    select percent
+                    from DISCOUNT
+                    where travelCode = "''' + travel_code + '''"
+                    and orderNo = "''' + order_no + '''"
+                    ;
+                ''')
+
+                price *= self.get_percent_discount(discounts)
+
+                self.execute_database_query('''
+                    update DISCOUNT 
+                    set orderNo = null, customerOrderNC = null
+                    where travelCode = "''' + travel_code + '''"
+                    and orderNo = "''' + order_no + '''"
+                    ;
+                ''')
+
+                self.change_money(price * 0.95)
+                self.fancy_print("95% of your payment back to your wallet")
+            else:
+                self.fancy_print("This order is not paid!")
+
             self.user_personal_future_flights()
         else:
             self.user_main()
 
-    def user_buy_ticket(self):
+    def buy_ticket(self):
         Terminal.fancy_print("Enter travel code:")
         travel_code = input()
-        # TODO
+        answer = self.execute_database_query('''
+            select airplaneCode, seatNo
+            from TravelEmptySeatUView as ES
+            where ES.travelCode = "''' + travel_code + '''";
+        ''')
 
-    def user_comment(self):
+        if len(answer) == 0:
+            Terminal.fancy_print('Nothing to display!')
+            self.user_main()
+        else:
+            print(answer)
+
+            Terminal.fancy_print("Enter airplane code:")
+            airplane_code = input()
+
+            Terminal.fancy_print("Enter seat no:")
+            seat_no = input()
+
+            Terminal.fancy_print("Enter order no:")
+            order_no = input()
+
+            self.execute_database_query('''
+                insert into order
+                values ("''' + self.current_NC + '''", "''' + order_no + '''",
+                    'NotPaid', "''' + travel_code + '''", null, "''' + seat_no + '''",
+                    "''' + airplane_code + '''");   
+            ''')
+            if self.discounts2():
+                Terminal.fancy_print("Do you want to use your discounts",
+                                     "for this order?",
+                                     "[1] Yes",
+                                     "[2] No")
+                query = int(input())
+
+                price = self.get_travel_price(travel_code)
+
+                if query == 1:
+                    Terminal.fancy_print("Enter discount numbers (e.g. 23 34 12)")
+                    discounts = input().split(" ")
+                    self.execute_database_query('''
+                        update DISCOUNT as D
+                        set D.customerOrderNC = null
+                            , D.Order_No = null
+                        where D.customerNC = "''' + self.current_NC + '''"
+                        ;
+                    ''')
+                    price *= self.get_percent_discount(discounts)
+
+                    for discount_no in discounts:
+                        self.execute_database_query('''
+                            update DISCOUNT as D
+                            set D.customerOrderNC = "''' + self.current_NC + '''"
+                                , D.Order_No = "''' + order_no + '''"
+                            where D.customerNC = "''' + self.current_NC + '''"
+                            and D.discountNo = "''' + discount_no + '''"
+                            ;
+                        ''')
+
+                if self.get_money() < price:
+                    self.fancy_print("Price: " + str(price) + "$",
+                                     "You have not enough money to buy ticket!")
+                else:
+                    self.change_money(-price)
+                    self.execute_database_query('''
+                        update ORDER
+                        set paymentStatus = 'Paid'
+                        where customerNC = "''' + self.current_NC + '''"
+                        and orderNo = "''' + order_no + '''";
+                    ''')
+                    self.fancy_print("You bought the ticket!",
+                                     "Price: " + str(price) + "$")
+
+    def get_percent_discount(self, discounts):
+        mult_discounts = 1.0
+        for discount_no in discounts:
+            mult_discounts *= self.execute_database_query('''
+                            select percent 
+                            from DISOUNT 
+                            where D.customerNC = "''' + self.current_NC + '''"
+                            and D.discountNo = "''' + discount_no + '''"
+                            ;
+                        ''')[0][0] / 100.0
+        return mult_discounts
+
+    def get_travel_price(self, travel_code):
+        return self.execute_database_query('''
+                    select price 
+                    from TRAVEL 
+                    where code = "''' + travel_code + '''"
+                ''')[0][0]
+
+    def comment(self):
         Terminal.fancy_print("Enter your comment number:")
         comment_number = input()
         Terminal.fancy_print("Write your comment:"
@@ -166,10 +323,10 @@ class UserTerminal(Terminal):
         self.execute_database_query('''
             insert into COMMENT values ("''' + self.current_NC + '''"
             , "''' + comment_number + '''"
-            , "''' + query_comment + '''")
+            , "''' + query_comment + '''");
         ''')
 
-    def user_personal_flights(self):
+    def personal_flights(self):
         Terminal.fancy_print("Choose one of these options:"
                              , '[1] Past flights'
                              , '[2] Future flights'
