@@ -19,6 +19,7 @@ class ManagerTerminal(Terminal):
                              , '[10] Give salary to employees'
                              , '[11] Add employee'
                              , '[12] Insert Crew to Flight'
+                             , '[13] Exit'
                              )
         query = int(input())
         if query == 1:
@@ -45,6 +46,8 @@ class ManagerTerminal(Terminal):
             self.manager_add_employee()
         elif query == 12:
             self.manager_add_flight_crew()
+        elif query == 13:
+            return
         else:
             self.manager_main()
 
