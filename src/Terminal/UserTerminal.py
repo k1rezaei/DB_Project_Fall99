@@ -1,7 +1,7 @@
 from Terminal.Terminal import Terminal
 from psycopg2._psycopg import Error
 
-from Terminal.UserQueries import query_discount_set_null, query_all_future_flights, query_travel_price, \
+from Queries.UserQueries import query_discount_set_null, query_all_future_flights, query_travel_price, \
     query_empty_seats, query_paymet_status, query_discount_percents
 
 

@@ -1,6 +1,6 @@
 from psycopg2._psycopg import Error
 
-from Terminal import ManagerQueries
+from Queries import ManagerQueries
 from Terminal.Terminal import Terminal
 
 
