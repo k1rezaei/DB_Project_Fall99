@@ -57,7 +57,7 @@ class UserTerminal(Terminal):
             self.register()
 
     def user_main(self):
-        Terminal.fancy_print("User: " + self.current_username + "!",
+        Terminal.fancy_print("User: " + self.current_NC + "!",
                              "Choose one of theese options:",
                              "[1] Your discounts",
                              "[2] Budget",
