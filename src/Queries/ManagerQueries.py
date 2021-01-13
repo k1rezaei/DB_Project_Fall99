@@ -83,7 +83,7 @@ def get_give_salary_query():
 
 
 def get_employee_score_query():
-    query = '''SELECT * from EmployeeScoreMView;'''
+    query = '''SELECT * from CrewScoreMView;'''
     return query
 
 
@@ -92,16 +92,15 @@ def get_airplane_score_query():
     return query
 
 
-# TODO add to views or not?
 def get_captains_score_query():
-    query = '''SELECT X.code, X.name, AVG(Y.score)
-            FROM EMPLOYEE AS X, ORDER AS Y, TRAVEL AS Z
-            WHERE Y.travelCode = Z.code and Z.captainCode = X.code
-            GROUP BY X.code, X.name;'''
+    query = '''SELECT * FROM CaptainScoreMView;'''
     return query
 
 
-# TODO: change query tables, to view tables! IMPORTANT
+def get_insert_employee_query(code, name, job_type, year, salary, total_salary):
+    query = 'INSERT INTO EMPLOYEE VALUES ("' + code + '", "' + name + '", "' + \
+            job_type + '", "' + year + '", ' + str(salary) + ', ' + str(total_salary) + ');'
+    return query
 
 
 if __name__ == '__main__':
@@ -118,3 +117,4 @@ if __name__ == '__main__':
     print(get_all_airplanes_query())
     print(get_customers_by_travels())
     print(get_captains_score_query())
+    print(get_insert_employee_query('1010', 'Keivan', 'Cap', '2020', 1000, 0))

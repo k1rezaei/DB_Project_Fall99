@@ -6,7 +6,7 @@ from Terminal.Terminal import Terminal
 
 class ManagerTerminal(Terminal):
     def manager_main(self):
-        Terminal.fancy_print("Welcome back " + self.current_NC + "!", "Choose one of these options:"
+        Terminal.fancy_print("Welcome back Manager! Choose one of these options:"
                              , '[1] Add new flight'
                              , '[2] Add/Remove airplane'
                              , '[3] User\'s comments'
@@ -17,6 +17,7 @@ class ManagerTerminal(Terminal):
                              , '[8] Analyzing scores'
                              , '[9] See entity lists'
                              , '[10] Give salary to employees'
+                             , '[11] Add employee'
                              )
         query = int(input())
         if query == 1:
@@ -39,6 +40,8 @@ class ManagerTerminal(Terminal):
             self.manager_entity_lists()
         elif query == 10:
             self.manager_give_salaries()
+        elif query == 11:
+            self.manager_add_employee()
 
     def manager_add_flight(self):
         all_flights = self.execute_database_query(ManagerQueries.get_all_flight_query())
@@ -58,9 +61,9 @@ class ManagerTerminal(Terminal):
         captain_code = int(input())
 
         try:
-            self.execute_database_query(ManagerQueries.get_add_flight_query(new_code, time, starting_city, target_city,
+            self.execute_database_query(ManagerQueries.get_add_flight_query(str(new_code), time, starting_city, target_city,
                                                                             ticket_price, airplane_code, captain_code))
-            print("Flight added successfully!")
+            Terminal.fancy_print("Flight added successfully!")
         except (Exception, Error) as error:
             print("Error while inserting new flight", error)
 
@@ -81,8 +84,13 @@ class ManagerTerminal(Terminal):
         city = input()
         try:
             self.execute_database_query(
-                ManagerQueries.get_add_airplane_query(new_code, cap, model, city))
-            print("Airplane added successfully!")
+                ManagerQueries.get_add_airplane_query(str(new_code), cap, model, city))
+            Terminal.fancy_print("Airplane added successfully!")
+
+            for i in range(cap):
+                self.execute_database_query('INSERT INTO SEAT VALUES ("' + str(i) + '", "' +
+                                            str(new_code) + '")')
+
         except (Exception, Error) as error:
             print("Error while inserting new airplane", error)
 
@@ -94,7 +102,7 @@ class ManagerTerminal(Terminal):
         try:
             self.execute_database_query(
                 ManagerQueries.get_remove_airplane_query(code))
-            print("Airplane removed successfully!")
+            Terminal.fancy_print("Airplane removed successfully!")
         except (Exception, Error) as error:
             print("Error while removing airplane", error)
 
@@ -112,7 +120,7 @@ class ManagerTerminal(Terminal):
         try:
             all_comments = self.execute_database_query(
                 ManagerQueries.get_all_comments_query())
-            print(all_comments)
+            Terminal.table_print(all_comments, ['customerNC', 'commentNO', 'text'])
         except (Exception, Error) as error:
             print("Error while fetching comments", error)
 
@@ -130,7 +138,7 @@ class ManagerTerminal(Terminal):
             self.execute_database_query(
                 ManagerQueries.get_add_discount_query(nc, discount_no,
                                                       percent, expiration_time))
-            print('Giving discount successful')
+            Terminal.fancy_print('Giving discount successful')
         except (Exception, Error) as error:
             print("Error while inserting discount", error)
 
@@ -141,7 +149,7 @@ class ManagerTerminal(Terminal):
             cities = self.execute_database_query(
                 ManagerQueries.get_target_city_query())
 
-            print(cities)  # TODO print?
+            Terminal.table_print(cities, ['city', '#'])
         except (Exception, Error) as error:
             print("Error while fetching target city data", error)
 
@@ -153,7 +161,7 @@ class ManagerTerminal(Terminal):
         try:
             airplanes = self.execute_database_query(
                 ManagerQueries.get_airplanes_in_city_query(city))
-            print(airplanes)  # TODO print?
+            Terminal.table_print(airplanes, ['code', 'capacity', 'model', 'city'])
         except (Exception, Error) as error:
             print("Error while fetching airplanes", error)
 
@@ -163,7 +171,7 @@ class ManagerTerminal(Terminal):
         try:
             employees = self.execute_database_query(
                 ManagerQueries.get_employee_score_query())
-            print(employees)  # TODO print?
+            Terminal.table_print(employees, ['code', 'name', 'job type', 'average score'])
         except (Exception, Error) as error:
             print("Error while fetching employees\' scores", error)
 
@@ -173,7 +181,7 @@ class ManagerTerminal(Terminal):
         try:
             airplanes = self.execute_database_query(
                 ManagerQueries.get_airplane_score_query())
-            print(airplanes)  # TODO print?
+            Terminal.table_print(airplanes, ['code', 'average score'])
         except (Exception, Error) as error:
             print("Error while fetching airplanes\' scores", error)
 
@@ -183,7 +191,7 @@ class ManagerTerminal(Terminal):
         try:
             captains = self.execute_database_query(
                 ManagerQueries.get_captains_score_query())
-            print(captains)  # TODO print?
+            Terminal.table_print(captains, ['code', 'name', 'average score'])
         except (Exception, Error) as error:
             print("Error while fetching captains\' scores", error)
 
@@ -206,7 +214,7 @@ class ManagerTerminal(Terminal):
             all_customers = self.execute_database_query(
                 ManagerQueries.get_customers_by_travels())
 
-            print(all_customers)  # TODO print?
+            Terminal.table_print(all_customers, ['NC', 'first name', 'last name', '#'])
         except (Exception, Error) as error:
             print("Error while fetching customers\' travels", error)
 
@@ -217,7 +225,8 @@ class ManagerTerminal(Terminal):
             all_customers = self.execute_database_query(
                 ManagerQueries.get_all_customers_query())
 
-            print(all_customers)  # TODO print?
+            Terminal.table_print(all_customers, ['NC', 'password', 'first name', 'last name',
+                                                 'money'])
         except (Exception, Error) as error:
             print("Error while fetching customers", error)
 
@@ -228,7 +237,7 @@ class ManagerTerminal(Terminal):
             all_airplanes = self.execute_database_query(
                 ManagerQueries.get_all_airplanes_query())
 
-            print(all_airplanes)  # TODO print?
+            Terminal.table_print(all_airplanes, ['code', 'capacity', 'model', 'city'])
         except (Exception, Error) as error:
             print("Error while fetching airplanes", error)
 
@@ -239,7 +248,8 @@ class ManagerTerminal(Terminal):
             all_employees = self.execute_database_query(
                 ManagerQueries.get_all_employees_query())
 
-            print(all_employees)  # TODO print?
+            Terminal.table_print(all_employees, ['code', 'name', 'job type',
+                                                 'employment year', 'salary', 'total salary'])
         except (Exception, Error) as error:
             print("Error while fetching employees", error)
 
@@ -250,7 +260,8 @@ class ManagerTerminal(Terminal):
             all_travels = self.execute_database_query(
                 ManagerQueries.get_all_travels_query())
 
-            print(all_travels)  # TODO print?
+            Terminal.table_print(all_travels, ['code', 'time', 'start city', 'target city',
+                                               'ticket price', 'airplane code', 'captain code'])
         except (Exception, Error) as error:
             print("Error while fetching travels", error)
 
@@ -275,8 +286,29 @@ class ManagerTerminal(Terminal):
         try:
             self.execute_database_query(
                 ManagerQueries.get_give_salary_query())
-            print("Giving salaries successful")
+            Terminal.fancy_print("Giving salaries successful")
         except (Exception, Error) as error:
             print("Error while giving salaries", error)
 
         self.manager_back_to_main()
+
+    def manager_add_employee(self):
+        Terminal.fancy_print('Enter following Information:', 'name',
+                             'job type', 'year')
+        salary = 100
+        totalSalary = 0
+        name = input()
+        job_type = input()
+        year = input()
+
+        all_employees = self.execute_database_query(
+            ManagerQueries.get_all_employees_query())
+        new_code = len(all_employees)
+
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_insert_employee_query(
+                    str(new_code), name, job_type, year, salary, totalSalary))
+            Terminal.fancy_print("inserting employee successful")
+        except (Exception, Error) as error:
+            print("Error while inserting employee", error)
