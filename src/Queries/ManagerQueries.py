@@ -33,7 +33,7 @@ def get_all_comments_query():
 
 
 def get_all_employees_query():
-    query = '''SELECT * FROM EMPLOYEES;'''
+    query = '''SELECT * FROM EMPLOYEE;'''
     return query
 
 
