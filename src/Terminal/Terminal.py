@@ -6,8 +6,6 @@ def change(query: str):
 
 
 def execute_data_base_query(cursor, query):
-    print(query)
-    print(change(query))
     cursor.execute(change(query))
     return cursor.fetchall()
 
