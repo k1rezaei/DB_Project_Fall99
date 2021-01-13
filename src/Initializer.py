@@ -1,11 +1,15 @@
 import psycopg2
 from psycopg2 import Error
 
-from Definer.TableDefiner import create_tables
+from Definer.TableDefiner import create_tables, drop_tables
 from Definer.ViewDefiner import UserView, ManagerView
 from Login import my_database, user_password, manager_password, user_username, manager_username
 from Terminal.Terminal import Terminal
 from Terminal.ManagerTerminal import ManagerTerminal
+
+
+def delete_user(cursor):
+    cursor.execute("DROP USER customer_user;")
 
 
 def create_user(cursor):
@@ -31,6 +35,11 @@ if __name__ == '__main__':
         create_tables(cursor)
         user_view = UserView(cursor)
         manager_view = ManagerView(cursor)
+
+        user_view.drop_all()
+        manager_view.drop_all()
+        drop_tables(cursor)
+
         user_view.create_all()
         manager_view.create_all()
         create_user(cursor)

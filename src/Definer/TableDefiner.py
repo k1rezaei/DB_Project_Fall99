@@ -113,3 +113,8 @@ def create_tables(cursor):
     create_comment(cursor)
     create_order(cursor)
     create_discount(cursor)
+
+def drop_tables(cursor):
+    cursor.execute('''
+        drop table AIRPLANE, SEAT, EMPLOYEE, TRAVEL, FLIGHT_CREW, CUSTOMER, COMMENT, ORDER, DISCOUNT;
+    ''')
