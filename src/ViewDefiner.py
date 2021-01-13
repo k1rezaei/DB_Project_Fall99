@@ -118,12 +118,16 @@ class ManagerView(ViewDefiner):
                 '''
         self.execute_create_view_query(query, 'AirplaneScoreMView')
 
-    # TODO this is wrong! :)
     def create_view_employee_score(self):
-        query = '''CREATE VIEW EmployeeScoreMView (airplaneCode, avgScore)
-                    AS SELECT E.code, AVG(O.score) 
-                    FROM EMPLOYEE AS E, ORDER AS O
-                    WHERE E.code = O.airplaneCode
-                    GROUP BY E.code;
+        query = '''CREATE VIEW EmployeeScoreMView (employeeCode, avgCrewScore, avgCaptainScore)
+                    as select E.code, (select avg(score)
+                                        from  ORDER as O, FLIGHT_CREW as fc
+                                        where fc.travelCode = O.travelCode
+                                        and fc.employeeCode = E.code
+                                        ), (select avg(score)
+                                            from  ORDER as O, TRAVEL as T
+                                            where T.code = O.travelCode
+                                            and T.captainCode = E.code)
+                    FROM EMPLOYEE AS E
                 '''
         self.execute_create_view_query(query, 'EmployeeScoreMView')
