@@ -245,6 +245,7 @@ class UserTerminal(Terminal):
             order_no = input()
 
             self.execute_database_query(self.query_insert_order(airplane_code, order_no, seat_no, travel_code))
+            discounts = []
             if self.discounts():
                 Terminal.fancy_print("Do you want to use your discounts",
                                      "for this order?",
@@ -253,7 +254,6 @@ class UserTerminal(Terminal):
                 query = int(input())
 
                 price = self.get_travel_price(travel_code)
-                discounts = []
 
                 if query == 1:
                     Terminal.fancy_print("Enter discount numbers (e.g. 23 34 12)")
@@ -265,18 +265,18 @@ class UserTerminal(Terminal):
                     if flag:
                         price *= self.get_percent_discount(discounts)
 
-                if self.get_money() < price:
-                    self.fancy_print("Price: " + str(price) + "$",
-                                     "You have not enough money to buy ticket!")
-                else:
-                    self.change_money(-price)
+            if self.get_money() < price:
+                self.fancy_print("Price: " + str(price) + "$",
+                                 "You have not enough money to buy ticket!")
+            else:
+                self.change_money(-price)
 
-                    for discount_no in discounts:
-                        self.execute_database_query(self.query_use_discount(discount_no, order_no))
+                for discount_no in discounts:
+                    self.execute_database_query(self.query_use_discount(discount_no, order_no))
 
-                    self.execute_database_query(self.query_set_order_status(order_no, 'Paid'))
-                    self.fancy_print("You bought the ticket!",
-                                     "Price: " + str(price) + "$")
+                self.execute_database_query(self.query_set_order_status(order_no, 'Paid'))
+                self.fancy_print("You bought the ticket!",
+                                 "Price: " + str(price) + "$")
 
     def get_percent_discount(self, discounts):
         mult_discounts = 1.0
