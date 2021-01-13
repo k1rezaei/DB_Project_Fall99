@@ -27,6 +27,19 @@ class Terminal:
             print(border * 2 + " " + s + " " * (maxi - len(s) + 1) + border * 2)
         print(border * (maxi + 6))
 
+    @staticmethod
+    def table_print(table, header):
+        out = ""
+        for x in header:
+            out += str(x) + "\t"
+        print(out)
+
+        for row in table:
+            out = ""
+            for item in row:
+                out += str(item) + "\t"
+            print(out)
+
     def start(self):
         Terminal.fancy_print("Welcome!", "Choose one of theese options:"
                              , "[1] Register"
