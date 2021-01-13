@@ -5,20 +5,20 @@ def change(query: str):
     return query.replace('"', '\'')
 
 
-def execute_data_base_query(cursor, query):
-    print(query)
-    print(change(query))
+def execute_data_base_query(cursor, connection, query):
     cursor.execute(change(query))
+    connection.commit()
     return cursor.fetchall()
 
 
 class Terminal:
-    def __init__(self, cursor):
+    def __init__(self, cursor, connection):
         self.cursor = cursor
+        self.connection = connection
         self.current_NC = None  # it must be a string
 
     def execute_database_query(self, query):
-        return execute_data_base_query(self.cursor, query)
+        return execute_data_base_query(self.cursor, self.connection, query)
 
     @staticmethod
     def fancy_print(*strings):
@@ -44,4 +44,3 @@ class Terminal:
             for item in row:
                 out += str(item) + "\t"
             print(out)
-
