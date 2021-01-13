@@ -42,7 +42,7 @@ class UserTerminal(Terminal):
             Terminal.fancy_print('No discount to display!')
             return False
         else:
-            print(answer)  # TODO khoshgel kardane khorooji
+            Terminal.table_print(answer, ["discountNo", "percent", "expirationTime"])
             return True
 
     def discounts(self):
@@ -111,13 +111,14 @@ class UserTerminal(Terminal):
         if len(answer) == 0:
             Terminal.fancy_print('Nothing to display!')
         else:
-            print(answer)  # TODO khoshgel kardane khorooji
+            Terminal.table_print(answer, ["code", "time", "startCity", "targetCity", "ticketPrice",
+                                          "airplaneCode", "captainCode", "avgScore", "emptySeats"])
 
         self.user_main()
 
     def user_personal_past_flights(self):
         answer = self.execute_database_query('''
-            select T.code, T.time, T.startingCity, T.targetCity, 
+            select T.code, O.orderNo, T.time, T.startingCity, T.targetCity, 
                     T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
             from TRAVEL as T, ORDER as O
             where clock_timestamp() >= T.time
@@ -127,7 +128,8 @@ class UserTerminal(Terminal):
         if len(answer) == 0:
             Terminal.fancy_print('Nothing to display!')
         else:
-            print(answer)  # TODO khoshgel kardane khorooji
+            Terminal.table_print(answer, ["travelCode", "orderNo", "time", "startingCity", "targetCity",
+                                          "ticketPrice", "airplaneCode", "seatNo", "paymentStatus"])
 
         Terminal.fancy_print("Choose one of theese options:",
                              "[1] Score a travel",
@@ -160,7 +162,8 @@ class UserTerminal(Terminal):
         if len(answer) == 0:
             Terminal.fancy_print('Nothing to display!')
         else:
-            print(answer)  # TODO khoshgel kardane khorooji
+            Terminal.table_print(answer, ["travelCode", "orderNo", "time", "startingCity", "targetCity",
+                                          "ticketPrice", "airplaneCode", "seatNo", "paymentStatus"])
 
         Terminal.fancy_print("Choose one of theese options:",
                              "[1] Cancel an order",
@@ -223,7 +226,7 @@ class UserTerminal(Terminal):
             Terminal.fancy_print('Nothing to display!')
             self.user_main()
         else:
-            print(answer)
+            Terminal.table_print(answer, ['airplaneCode', 'seatNo'])
 
             Terminal.fancy_print("Enter airplane code:")
             airplane_code = input()
