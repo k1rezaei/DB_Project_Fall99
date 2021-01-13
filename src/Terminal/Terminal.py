@@ -1,8 +1,14 @@
 from psycopg2._psycopg import Error
 
 
+def change(query: str):
+    return query.replace('"', '\'')
+
+
 def execute_data_base_query(cursor, query):
-    cursor.execute(query)
+    print(query)
+    print(change(query))
+    cursor.execute(change(query))
     return cursor.fetchall()
 
 

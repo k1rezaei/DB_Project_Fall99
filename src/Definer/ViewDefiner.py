@@ -52,9 +52,9 @@ class UserView(ViewDefiner):
 
     def create_view_travel_empty_seat(self):
         query = '''CREATE VIEW TravelEmptySeatUView (travelCode, seatNo, airplaneCode)
-                    AS ((SELECT T.code AS travelCode, A.seatNo AS seatNo, A.airplaneCode AS airplaneCode
-                        FROM TRAVEL AS T, AIRPLANE AS A 
-                        WHERE T.airplaneCode = A.code)
+                    AS ((SELECT T.code AS travelCode, S.seatNo AS seatNo, S.airplaneCode AS airplaneCode
+                        FROM TRAVEL AS T, SEAT AS S 
+                        WHERE T.airplaneCode = S.airplaneCode)
                         except
                         (SELECT travelCode, seatNo, airplaneCode FROM ORDER_TABLE));
                 '''
@@ -141,7 +141,7 @@ class ManagerView(ViewDefiner):
         self.execute_create_view_query(query, 'CrewScoreMView')
 
     def create_view_captain_score(self):
-        query = '''CREATE VIEW CaptainScoreMView (employeeCode, name, jobType, avgScore)
+        query = '''CREATE VIEW CaptainScoreMView (employeeCode, name, avgScore)
                     as select E.code, E.name, (select avg(score)
                                         from  ORDER_TABLE as O, TRAVEL as T
                                         where T.code = O.travelCode
