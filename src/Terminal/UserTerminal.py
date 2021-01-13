@@ -1,10 +1,13 @@
 from Terminal.Terminal import Terminal
 from psycopg2._psycopg import Error
 
+from Terminal.UserQueries import query_discount_set_null, query_all_future_flights, query_travel_price, \
+    query_empty_seats, query_paymet_status, query_discount_percents
+
 
 class UserTerminal(Terminal):
     def user_main(self):
-        Terminal.fancy_print("Welcome back " + self.current_username + "!",
+        Terminal.fancy_print("User: " + self.current_username + "!",
                              "Choose one of theese options:",
                              "[1] Your discounts",
                              "[2] Budget",
@@ -16,23 +19,30 @@ class UserTerminal(Terminal):
         query = int(input())
         if query == 1:
             self.discounts()
+            self.user_main()
         elif query == 2:
             self.budget()
+            self.user_main()
         elif query == 3:
             self.all_flights()
+            self.user_main()
         elif query == 4:
             self.personal_flights()
+            self.user_main()
         elif query == 5:
             self.buy_ticket()
+            self.user_main()
         elif query == 6:
             self.comment()
+            self.user_main()
         else:
             self.current_username = None
             self.current_NC = None
             self.is_manager = False
             self.start()
+            # TODO in bayad avaz she!
 
-    def discounts2(self):
+    def discounts(self):
         answer = []
         try:
             answer = self.execute_database_query(self.query_not_expired_discounts())
@@ -46,10 +56,6 @@ class UserTerminal(Terminal):
             Terminal.table_print(answer, ["discountNo", "percent", "expirationTime"])
             return True
 
-    def discounts(self):
-        self.discounts2()
-        self.user_main()
-
     def budget(self):
         money = self.get_money()
         Terminal.fancy_print("Your wallet: " + str(money) + "$", "Choose one of theese options:",
@@ -62,8 +68,6 @@ class UserTerminal(Terminal):
             amount_of_money = int(input())
             self.change_money(amount_of_money)
             self.budget()
-        else:
-            self.user_main()
 
     def change_money(self, toadd_money):
         money = self.get_money()
@@ -109,8 +113,6 @@ class UserTerminal(Terminal):
             Terminal.table_print(answer, ["code", "time", "startCity", "targetCity", "ticketPrice",
                                           "airplaneCode", "captainCode", "avgScore", "emptySeats"])
 
-        self.user_main()
-
     def user_personal_past_flights(self):
         answer = self.execute_database_query(self.query_personal_past_flights())
         if len(answer) == 0:
@@ -135,8 +137,6 @@ class UserTerminal(Terminal):
                 Terminal.fancy_print("Your scoring failed!")
 
             self.user_personal_past_flights()
-        else:
-            self.user_main()
 
     def user_personal_future_flights(self):
         answer = self.execute_database_query(self.query_future_flights())
@@ -176,8 +176,6 @@ class UserTerminal(Terminal):
                 self.fancy_print("This order is not paid!")
 
             self.user_personal_future_flights()
-        else:
-            self.user_main()
 
     def buy_ticket(self):
         Terminal.fancy_print("Enter travel code:")
@@ -186,7 +184,7 @@ class UserTerminal(Terminal):
 
         if len(answer) == 0:
             Terminal.fancy_print('Nothing to display!')
-            self.user_main()
+            return
         else:
             Terminal.table_print(answer, ['airplaneCode', 'seatNo'])
 
@@ -200,7 +198,7 @@ class UserTerminal(Terminal):
             order_no = input()
 
             self.execute_database_query(self.query_insert_order(airplane_code, order_no, seat_no, travel_code))
-            if self.discounts2():
+            if self.discounts():
                 Terminal.fancy_print("Do you want to use your discounts",
                                      "for this order?",
                                      "[1] Yes",
@@ -267,8 +265,6 @@ class UserTerminal(Terminal):
             self.user_personal_past_flights()
         elif query == 2:
             self.user_personal_future_flights()
-        else:
-            self.user_main()
 
     def query_not_expired_discounts(self):
         return '''
@@ -373,62 +369,3 @@ class UserTerminal(Terminal):
             , "''' + comment_number + '''"
             , "''' + query_comment + '''");
         '''
-
-
-def query_discount_set_null(order_no, travel_code):
-    return '''
-                update DISCOUNT 
-                set orderNo = null, customerOrderNC = null
-                where travelCode = "''' + travel_code + '''"
-                and orderNo = "''' + order_no + '''"
-                ;
-            '''
-
-
-def query_all_future_flights():
-    # attention: don't put semicolon at the end of this query
-    return '''
-        select *, (select count(*)
-                    from TravelEmptySeatUView as ES 
-                    where T.code=ES.travelCode
-        ) as emptySeats
-        from TRAVEL as T, AirplaneScoreUView as AirS
-        where clock_timestamp() < T.time
-        and T.airplaneCode = AirS.airplaneCode
-        '''
-
-
-def query_travel_price(travel_code):
-    return '''
-                select price 
-                from TRAVEL 
-                where code = "''' + travel_code + '''"
-            '''
-
-
-def query_empty_seats(travel_code):
-    return '''
-        select airplaneCode, seatNo
-        from TravelEmptySeatUView as ES
-        where ES.travelCode = "''' + travel_code + '''";
-    '''
-
-
-def query_paymet_status(order_no, travel_code):
-    return '''
-            select paymentStatus 
-            from ORDER
-            where travelCode = "''' + travel_code + '''"
-            and orderNo = "''' + order_no + '''"
-            ;
-        '''
-
-
-def query_discount_percents(order_no, travel_code):
-    return '''
-                select percent
-                from DISCOUNT
-                where travelCode = "''' + travel_code + '''"
-                and orderNo = "''' + order_no + '''"
-                ;
-            '''
