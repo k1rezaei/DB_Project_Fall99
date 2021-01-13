@@ -351,7 +351,7 @@ class UserTerminal(Terminal):
 
     def query_score_flight(self, order_no, score):
         return '''
-                    update ORDER
+                    update ORDER_TABLE
                     set score=''' + str(score) + '''
                     where customerNC = "''' + self.current_NC + '''"
                     and orderNo = "''' + order_no + '''";
@@ -361,7 +361,7 @@ class UserTerminal(Terminal):
         return '''
             select T.code, O.orderNo, T.time, T.startingCity, T.targetCity, 
                     T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
-            from TRAVEL as T, ORDER as O
+            from TRAVEL as T, ORDER_TABLE as O
             where clock_timestamp() >= T.time
             and O.travelCode = T.code
             and O.customerNC = "''' + self.current_NC + '''"
@@ -369,7 +369,7 @@ class UserTerminal(Terminal):
 
     def query_set_order_status(self, order_no, new_status):
         return '''
-                    update ORDER
+                    update ORDER_TABLE
                     set paymentStatus = "''' + new_status + '''"
                     where customerNC = "''' + self.current_NC + '''"
                     and orderNo = "''' + order_no + '''"
@@ -379,7 +379,7 @@ class UserTerminal(Terminal):
         return '''
                 select T.code, O.orderNo, T.time, T.startingCity, T.targetCity, 
                         T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
-                from TRAVEL as T, ORDER as O
+                from TRAVEL as T, ORDER_TABLE as O
                 where clock_timestamp() < T.time
                 and O.travelCode = T.code
                 and O.customerNC = "''' + self.current_NC + '''"
@@ -387,7 +387,7 @@ class UserTerminal(Terminal):
 
     def query_insert_order(self, airplane_code, order_no, seat_no, travel_code):
         return '''
-                insert into order
+                insert into ORDER_TABLE
                 values ("''' + self.current_NC + '''", "''' + order_no + '''",
                     'NotPaid', "''' + travel_code + '''", null, "''' + seat_no + '''",
                     "''' + airplane_code + '''");   

@@ -64,7 +64,7 @@ def create_discount(cursor):
             orderNo varchar(10), customerOrderNC varchar (10),
             primary key (customerNC, discountNo),
             foreign key (customerNC) references CUSTOMER(NC),
-            foreign key (orderNo, customerOrderNC) references ORDER(orderNo, customerNC));'''
+            foreign key (orderNo, customerOrderNC) references ORDER_TABLE(orderNo, customerNC));'''
     execute_create_table_query(cursor, query, 'DISCOUNT')
 
 
@@ -89,7 +89,7 @@ def create_seat(cursor):
 
 
 def create_order(cursor):
-    query = '''CREATE TABLE ORDER(
+    query = '''CREATE TABLE ORDER_TABLE(
                 customerNC varchar(10), orderNo varchar(10), 
                 paymentStatus varchar(10) NOT NULL, travelCode varchar(10),
                 score real, seatNo varchar(10),
@@ -100,7 +100,7 @@ def create_order(cursor):
                 foreign key (customerNC) references CUSTOMER(NC),
                 foreign key (travelCode) references TRAVEL(code),
                 foreign key (airplaneCode, seatNo) references SEAT(airplaneCode,seatNo));'''
-    execute_create_table_query(cursor, query, 'ORDER')
+    execute_create_table_query(cursor, query, 'ORDER_TABLE')
 
 
 def create_tables(cursor):
@@ -116,5 +116,5 @@ def create_tables(cursor):
 
 def drop_tables(cursor):
     cursor.execute('''
-        drop table AIRPLANE, SEAT, EMPLOYEE, TRAVEL, FLIGHT_CREW, CUSTOMER, COMMENT, ORDER, DISCOUNT;
+        drop table AIRPLANE, SEAT, EMPLOYEE, TRAVEL, FLIGHT_CREW, CUSTOMER, COMMENT, ORDER_TABLE, DISCOUNT;
     ''')
