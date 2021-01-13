@@ -211,8 +211,12 @@ class UserTerminal(Terminal):
                 if query == 1:
                     Terminal.fancy_print("Enter discount numbers (e.g. 23 34 12)")
                     discounts = input().split(" ")
-                    # TODO check mojaz boodane discount haye dade shode!
-                    price *= self.get_percent_discount(discounts)
+                    flag = True
+                    for discount_no in discounts:
+                        flag = flag and self.execute_database_query(self.query_is_available_discount(discount_no))[0][0]
+
+                    if flag:
+                        price *= self.get_percent_discount(discounts)
 
                 if self.get_money() < price:
                     self.fancy_print("Price: " + str(price) + "$",
@@ -282,6 +286,14 @@ class UserTerminal(Terminal):
                     from CUSTOMER as C
                     where C.customerNc == ''' + self.current_NC + '''
                     ;'''
+
+    def query_is_available_discount(self, discount_no):
+        return '''
+                    select (expirationTime > clock_timestamp() and orderNo is null)
+                    from DISCOUNT
+                    where discountNo = "''' + discount_no + '''"
+                    and customerNC = "''' + self.current_NC + '''"
+                '''
 
     def query_get_money(self):
         return '''
