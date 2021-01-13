@@ -60,6 +60,16 @@ class UserView(ViewDefiner):
                 '''
         self.execute_create_view_query(query, 'TravelEmptySeatUView')
 
+    def create_all(self):
+        self.create_view_airplane_score()
+        self.create_view_travel_empty_seat()
+
+    def drop_all(self):
+        self.cursor.execute('''
+            DROP VIEW AirplaneScoreUView;
+            DROP VIEW TravelEmptySeatUView;
+        ''')
+
 
 class ManagerView(ViewDefiner):
     def create_view_customer(self):
@@ -119,7 +129,7 @@ class ManagerView(ViewDefiner):
         self.execute_create_view_query(query, 'AirplaneScoreMView')
 
     def create_view_crew_score(self):
-        query = '''CREATE VIEW CrewScoreMView (employeeCode, avgScore)
+        query = '''CREATE VIEW CrewScoreMView (employeeCode, name, jobType, avgScore)
                     as select E.code, E.name, E.jobType, (select avg(score)
                                         from  ORDER as O, FLIGHT_CREW as fc
                                         where fc.travelCode = O.travelCode
@@ -131,7 +141,7 @@ class ManagerView(ViewDefiner):
         self.execute_create_view_query(query, 'CrewScoreMView')
 
     def create_view_captain_score(self):
-        query = '''CREATE VIEW CaptainScoreMView (employeeCode, avgScore)
+        query = '''CREATE VIEW CaptainScoreMView (employeeCode, name, jobType, avgScore)
                     as select E.code, E.name, (select avg(score)
                                         from  ORDER as O, TRAVEL as T
                                         where T.code = O.travelCode
@@ -140,3 +150,16 @@ class ManagerView(ViewDefiner):
                     where E.jobType = 'Captain';
                 '''
         self.execute_create_view_query(query, 'CaptainScoreMView')
+
+    def create_all(self):
+        self.create_view_airplane_score()
+        self.create_view_captain_score()
+        self.create_view_crew_score()
+
+
+    def drop_all(self):
+        self.cursor.execute('''
+            DROP VIEW AirplaneScoreMView;
+            DROP VIEW CrewScoreMView;
+            DROP VIEW CaptainScoreMView;
+        ''')

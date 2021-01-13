@@ -103,9 +103,18 @@ def create_order(cursor):
     execute_create_table_query(cursor, query, 'ORDER')
 
 
-def create_account(cursor):
-    query = '''CREATE TABLE ACCOUNT(
-                    username varchar(10) not null, password varchar(10) not null, isManager boolean not null,
-                    primary key (username),
-                    foreign key (customerNC) references CUSTOMER(NC));'''
-    execute_create_table_query(cursor, query, 'ORDER')
+def create_tables(cursor):
+    create_airplane(cursor)
+    create_seat(cursor)
+    create_employee(cursor)
+    create_travel(cursor)
+    create_flight_crew(cursor)
+    create_customer(cursor)
+    create_comment(cursor)
+    create_order(cursor)
+    create_discount(cursor)
+
+def drop_tables(cursor):
+    cursor.execute('''
+        drop table AIRPLANE, SEAT, EMPLOYEE, TRAVEL, FLIGHT_CREW, CUSTOMER, COMMENT, ORDER, DISCOUNT;
+    ''')
