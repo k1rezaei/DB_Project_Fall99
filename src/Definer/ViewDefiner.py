@@ -44,9 +44,13 @@ class UserView(ViewDefiner):
 
     def create_view_airplane_score(self):
         query = '''CREATE VIEW AirplaneScoreUView (airplaneCode, avgScore)
-                    AS SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
+                    AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
                     WHERE A.code = O.airplaneCode
-                    GROUP BY A.code;
+                    GROUP BY A.code)
+                    UNION 
+                    (SELECT A.code, 0 FROM AIRPLANE AS A
+                    WHERE NOT EXISTS(SELECT * from ORDER_TABLE WHERE airplaneCode = A.code)
+                    ));
                 '''
         self.execute_create_view_query(query, 'AirplaneScoreUView')
 
@@ -122,9 +126,13 @@ class ManagerView(ViewDefiner):
 
     def create_view_airplane_score(self):
         query = '''CREATE VIEW AirplaneScoreMView (airplaneCode, avgScore)
-                    AS SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
+                    AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
                     WHERE A.code = O.airplaneCode
-                    GROUP BY A.code;
+                    GROUP BY A.code)
+                    UNION 
+                    (SELECT A.code, 0 FROM AIRPLANE AS A
+                    WHERE NOT EXISTS(SELECT * from ORDER_TABLE WHERE airplaneCode = A.code)
+                    ));
                 '''
         self.execute_create_view_query(query, 'AirplaneScoreMView')
 

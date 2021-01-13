@@ -142,11 +142,11 @@ class UserTerminal(Terminal):
                              "[3] Order by ticket price")
         query = int(input())
         if query == 1:
-            database_query += "order by emptySeats"
+            database_query += "order by emptySeats;"
         elif query == 2:
-            database_query += "order by AirS.avgScore"
+            database_query += "order by AirS.avgScore;"
         elif query == 3:
-            database_query += "order by T.price"
+            database_query += "order by T.ticketPrice;"
 
         answer = []
         try:
@@ -321,7 +321,7 @@ class UserTerminal(Terminal):
         return '''
                 select discountNo, percent, expirationTime
                 from DISCOUNT as D
-                where D.customerNc == ''' + self.current_NC + '''
+                where D.customerNc = ''' + self.current_NC + '''
                 and D.orderNo is null
                 and clock_timestamp() > D.expirationTime;
                 '''
@@ -330,9 +330,7 @@ class UserTerminal(Terminal):
         return '''
                     update CUSTOMER
                     set money=''' + str(new_money) + '''
-                    from CUSTOMER as C
-                    where C.customerNc == ''' + self.current_NC + '''
-                    ;'''
+                    where CUSTOMER.NC = "''' + self.current_NC + '''";'''
 
     def query_is_available_discount(self, discount_no):
         return '''
@@ -346,7 +344,7 @@ class UserTerminal(Terminal):
         return '''
                     select money
                     from CUSTOMER as C
-                    where C.customerNc == "''' + self.current_NC + '''"
+                    where C.NC = "''' + self.current_NC + '''"
                     ;'''
 
     def query_score_flight(self, order_no, score):

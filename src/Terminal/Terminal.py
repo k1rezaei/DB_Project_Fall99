@@ -5,10 +5,21 @@ def change(query: str):
     return query.replace('"', '\'')
 
 
+def get_first(query: str):
+    for c in query:
+        if c == '\n' or c == ' ':
+            continue
+        return c
+
+
 def execute_data_base_query(cursor, connection, query):
+    new_query = change(query)
     cursor.execute(change(query))
+    result = []
+    if get_first(new_query) == 's' or get_first(new_query) == 'S':
+        result = cursor.fetchall()
     connection.commit()
-    return cursor.fetchall()
+    return result
 
 
 class Terminal:
