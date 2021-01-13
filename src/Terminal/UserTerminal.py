@@ -321,7 +321,7 @@ class UserTerminal(Terminal):
         return '''
                 select discountNo, percent, expirationTime
                 from DISCOUNT as D
-                where D.customerNc == ''' + self.current_NC + '''
+                where D.customerNc = ''' + self.current_NC + '''
                 and D.orderNo is null
                 and clock_timestamp() > D.expirationTime;
                 '''
@@ -331,7 +331,7 @@ class UserTerminal(Terminal):
                     update CUSTOMER
                     set money=''' + str(new_money) + '''
                     from CUSTOMER as C
-                    where C.NC == ''' + self.current_NC + '''
+                    where C.NC = ''' + self.current_NC + '''
                     ;'''
 
     def query_is_available_discount(self, discount_no):
@@ -346,7 +346,7 @@ class UserTerminal(Terminal):
         return '''
                     select money
                     from CUSTOMER as C
-                    where C.NC == "''' + self.current_NC + '''"
+                    where C.NC = "''' + self.current_NC + '''"
                     ;'''
 
     def query_score_flight(self, order_no, score):
