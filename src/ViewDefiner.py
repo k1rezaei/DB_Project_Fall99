@@ -118,16 +118,25 @@ class ManagerView(ViewDefiner):
                 '''
         self.execute_create_view_query(query, 'AirplaneScoreMView')
 
-    def create_view_employee_score(self):
-        query = '''CREATE VIEW EmployeeScoreMView (employeeCode, avgCrewScore, avgCaptainScore)
-                    as select E.code, (select avg(score)
+    def create_view_crew_score(self):
+        query = '''CREATE VIEW CrewScoreMView (employeeCode, avgScore)
+                    as select E.code, E.name, E.jobType, (select avg(score)
                                         from  ORDER as O, FLIGHT_CREW as fc
                                         where fc.travelCode = O.travelCode
                                         and fc.employeeCode = E.code
-                                        ), (select avg(score)
-                                            from  ORDER as O, TRAVEL as T
-                                            where T.code = O.travelCode
-                                            and T.captainCode = E.code)
+                                        )
                     FROM EMPLOYEE AS E
+                    where E.jobType != 'Captain';
                 '''
-        self.execute_create_view_query(query, 'EmployeeScoreMView')
+        self.execute_create_view_query(query, 'CrewScoreMView')
+
+    def create_view_captain_score(self):
+        query = '''CREATE VIEW CaptainScoreMView (employeeCode, avgScore)
+                    as select E.code, E.name, (select avg(score)
+                                        from  ORDER as O, TRAVEL as T
+                                        where T.code = O.travelCode
+                                        and T.captainCode = E.code)
+                    FROM EMPLOYEE AS E
+                    where E.jobType = 'Captain';
+                '''
+        self.execute_create_view_query(query, 'CaptainScoreMView')
