@@ -6,7 +6,7 @@ from Terminal.Terminal import Terminal
 
 class ManagerTerminal(Terminal):
     def manager_main(self):
-        Terminal.fancy_print("Welcome back " + self.current_username + "!", "Choose one of these options:"
+        Terminal.fancy_print("Welcome back " + self.current_NC + "!", "Choose one of these options:"
                              , '[1] Add new flight'
                              , '[2] Add/Remove airplane'
                              , '[3] User\'s comments'

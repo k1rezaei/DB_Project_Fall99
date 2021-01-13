@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import Error
 from Login import my_database, user_password, manager_password, user_username, manager_username
 from Terminal.Terminal import Terminal
-from Terminal.ManagerTerminal import ManagerTerminal
+from Terminal.UserTerminal import UserTerminal
 if __name__ == '__main__':
     try:
         connection = psycopg2.connect(user=user_username,
@@ -11,7 +11,7 @@ if __name__ == '__main__':
                                       database=my_database)
         cursor = connection.cursor()
 
-        terminal = Terminal(cursor)
+        terminal = UserTerminal(cursor)
         terminal.start()
 
     except (Exception, Error) as error:

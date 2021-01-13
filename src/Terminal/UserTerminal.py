@@ -6,6 +6,45 @@ from Queries.UserQueries import query_discount_set_null, query_all_future_flight
 
 
 class UserTerminal(Terminal):
+
+    def start(self):
+        Terminal.fancy_print("Welcome!", "Choose one of theese options:"
+                             , "[1] Register"
+                             , "[2] Login"
+                             , "[3] Exit")
+        query = int(input())
+        if query == 1:
+            self.register()
+        elif query == 2:
+            self.login()
+        else:
+            Terminal.fancy_print("Goodbye!")
+            return
+
+    def register(self):
+        Terminal.fancy_print('Enter enter your National Code:')
+        nc = input()
+        Terminal.fancy_print('Enter your password:')
+        password = input()
+        Terminal.fancy_print('Enter your first name')
+        first_name = input()
+        Terminal.fancy_print('Enter your lastname')
+        last_name = input()
+        try:
+            self.execute_database_query('insert into CUSTOMER VALUES ("' + nc + '", "' + password +
+                                        '", "' + first_name + '", "' + last_name + '", 0);')
+        except (Exception, Error) as error:
+            print(error)
+            Terminal.fancy_print("Your registration failed!")
+            self.start()
+            return
+        self.current_NC = nc
+        Terminal.fancy_print('Your registration completed!', 'Thanks for choosing us!')
+        self.user_main()
+
+    def login(self):
+        pass
+
     def user_main(self):
         Terminal.fancy_print("User: " + self.current_username + "!",
                              "Choose one of theese options:",
@@ -36,11 +75,8 @@ class UserTerminal(Terminal):
             self.comment()
             self.user_main()
         else:
-            self.current_username = None
             self.current_NC = None
-            self.is_manager = False
             self.start()
-            # TODO in bayad avaz she!
 
     def discounts(self):
         answer = []
