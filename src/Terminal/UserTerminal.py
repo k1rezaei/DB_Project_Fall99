@@ -43,10 +43,21 @@ class UserTerminal(Terminal):
         self.user_main()
 
     def login(self):
-        pass
+        Terminal.fancy_print('Enter enter your National Code:')
+        nc = input()
+        Terminal.fancy_print('Enter your password:')
+        password = input()
+        query = 'SELECT * FROM CUSTOMER WHERE NC = "' + nc + '" and password = "' + password + '";'
+        is_registered = self.execute_database_query(query)
+        if len(is_registered) > 0:
+            self.current_NC = nc
+            self.user_main()
+        else:
+            Terminal.fancy_print('You are Not Registered!')
+            self.register()
 
     def user_main(self):
-        Terminal.fancy_print("User: " + self.current_username + "!",
+        Terminal.fancy_print("User: " + self.current_NC + "!",
                              "Choose one of theese options:",
                              "[1] Your discounts",
                              "[2] Budget",
