@@ -18,6 +18,7 @@ class ManagerTerminal(Terminal):
                              , '[9] See entity lists'
                              , '[10] Give salary to employees'
                              , '[11] Add employee'
+                             , '[12] Insert Crew to Flight'
                              )
         query = int(input())
         if query == 1:
@@ -42,6 +43,10 @@ class ManagerTerminal(Terminal):
             self.manager_give_salaries()
         elif query == 11:
             self.manager_add_employee()
+        elif query == 12:
+            self.manager_add_flight_crew()
+        else:
+            self.manager_main()
 
     def manager_add_flight(self):
         all_flights = self.execute_database_query(ManagerQueries.get_all_flight_query())
@@ -294,12 +299,12 @@ class ManagerTerminal(Terminal):
 
     def manager_add_employee(self):
         Terminal.fancy_print('Enter following Information:', 'name',
-                             'job type', 'year')
-        salary = 100
+                             'job type', 'year', 'salary')
         totalSalary = 0
         name = input()
         job_type = input()
         year = input()
+        salary = int(input())
 
         all_employees = self.execute_database_query(
             ManagerQueries.get_all_employees_query())
@@ -314,3 +319,19 @@ class ManagerTerminal(Terminal):
             print("Error while inserting employee", error)
 
         self.manager_back_to_main()
+
+    def manager_add_flight_crew(self):
+        Terminal.fancy_print('Enter following Information:', 'Travel code',
+                             'Employee code')
+        travel_code = input()
+        employee_code = input()
+
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_insert_flight_crew_query(
+                    travel_code, employee_code))
+            Terminal.fancy_print("inserting flight crew successful")
+        except (Exception, Error) as error:
+            print("Error while inserting fight crew", error)
+
+        self.manager_main()
