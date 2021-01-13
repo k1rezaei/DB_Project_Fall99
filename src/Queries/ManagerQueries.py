@@ -1,9 +1,8 @@
 def get_add_flight_query(code, time, start_city, target_city, ticket_price,
                          airplane_code, captain_code):
-    query = '''INSERT INTO TRAVEL (code, time, startCity, targetCity, ticketPrice,
-     airplaneCode, captainCode) VALUES'''
-    query += '("' + code + '", "' + time + '", "' + start_city + '", "' + target_city + '", '
-    query += str(ticket_price) + ', "' + airplane_code + '", "' + captain_code + '");'
+    query = 'INSERT INTO TRAVEL (code, time, startCity, targetCity, ticketPrice,' \
+            'airplaneCode, captainCode) VALUES("' + code + '", "' + time + '", "' + start_city + '", "' +\
+            target_city + '", ' + str(ticket_price) + ', "' + airplane_code + '", "' + captain_code + '");'
     return query
 
 
@@ -45,7 +44,7 @@ def get_all_travels_query():
 
 def get_customers_by_travels():
     query = '''SELECT X.nc, X.firstName, X.lastName, count(*)
-                FROM (CUSTOMER as X, ORDER as Y)
+                FROM CUSTOMER as X, ORDER_TABLE as Y
                 WHERE Y.customerNC = X.nc
                 GROUP BY X.nc, X.firstName, X.lastName
                 ORDER BY count(*) DESC;'''
