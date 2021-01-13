@@ -321,7 +321,7 @@ class UserTerminal(Terminal):
         return '''
                 select discountNo, percent, expirationTime
                 from DISCOUNT as D
-                where D.customerNc = ''' + self.current_NC + '''
+                where D.customerNc = "''' + self.current_NC + '''"
                 and D.orderNo is null
                 and clock_timestamp() > D.expirationTime;
                 '''
