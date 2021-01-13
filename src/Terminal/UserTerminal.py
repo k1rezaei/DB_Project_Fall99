@@ -266,6 +266,7 @@ class UserTerminal(Terminal):
                         price *= self.get_percent_discount(discounts)
 
             if self.get_money() < price:
+                self.execute_database_query(self.query_delete_order(order_no))
                 self.fancy_print("Price: " + str(price) + "$",
                                  "You have not enough money to buy ticket!")
             else:
@@ -277,6 +278,13 @@ class UserTerminal(Terminal):
                 self.execute_database_query(self.query_set_order_status(order_no, 'Paid'))
                 self.fancy_print("You bought the ticket!",
                                  "Price: " + str(price) + "$")
+
+    def query_delete_order(self, order_no):
+        return '''
+                    delete from order_table 
+                    where customerNC = "''' + self.current_NC + '''"
+                    and orderNo = "''' + order_no + '''"
+                '''
 
     def get_percent_discount(self, discounts):
         mult_discounts = 1.0

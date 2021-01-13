@@ -23,7 +23,7 @@ def query_all_future_flights():
 
 def query_travel_price(travel_code):
     return '''
-                select price 
+                select ticketPrice 
                 from TRAVEL 
                 where code = "''' + travel_code + '''"
             '''

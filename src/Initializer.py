@@ -93,8 +93,8 @@ if __name__ == '__main__':
                                       host="127.0.0.1",
                                       database=my_database)
         cursor = connection.cursor()
-        insert(connection, cursor)
-        """
+        #insert(connection, cursor)
+
         user_view = UserView(cursor)
         manager_view = ManagerView(cursor)
 
@@ -106,7 +106,7 @@ if __name__ == '__main__':
         user_view.create_all()
         manager_view.create_all()
         create_user(cursor)
-        """
+
         connection.commit()
 
     except (Exception, Error) as error:
