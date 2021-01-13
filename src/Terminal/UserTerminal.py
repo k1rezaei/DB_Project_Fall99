@@ -321,7 +321,7 @@ class UserTerminal(Terminal):
         return '''
                 select discountNo, percent, expirationTime
                 from DISCOUNT as D
-                where D.customerNc = ''' + self.current_NC + '''
+                where D.customerNc = "''' + self.current_NC + '''"
                 and D.orderNo is null
                 and clock_timestamp() > D.expirationTime;
                 '''
@@ -357,7 +357,7 @@ class UserTerminal(Terminal):
 
     def query_personal_past_flights(self):
         return '''
-            select T.code, O.orderNo, T.time, T.startingCity, T.targetCity, 
+            select T.code, O.orderNo, T.time, T.startCity, T.targetCity, 
                     T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
             from TRAVEL as T, ORDER_TABLE as O
             where clock_timestamp() >= T.time
@@ -375,7 +375,7 @@ class UserTerminal(Terminal):
 
     def query_future_flights(self):
         return '''
-                select T.code, O.orderNo, T.time, T.startingCity, T.targetCity, 
+                select T.code, O.orderNo, T.time, T.startCity, T.targetCity, 
                         T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
                 from TRAVEL as T, ORDER_TABLE as O
                 where clock_timestamp() < T.time
