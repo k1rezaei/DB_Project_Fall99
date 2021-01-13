@@ -28,7 +28,7 @@ def get_remove_airplane_query(code):
 
 
 def get_all_comments_query():
-    query = '''SELECT * FROM COMMENTS;'''
+    query = '''SELECT * FROM COMMENT;'''
     return query
 
 
