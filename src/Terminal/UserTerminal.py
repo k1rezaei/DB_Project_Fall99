@@ -142,11 +142,11 @@ class UserTerminal(Terminal):
                              "[3] Order by ticket price")
         query = int(input())
         if query == 1:
-            database_query += "order by emptySeats"
+            database_query += "order by emptySeats;"
         elif query == 2:
-            database_query += "order by AirS.avgScore"
+            database_query += "order by AirS.avgScore;"
         elif query == 3:
-            database_query += "order by T.price"
+            database_query += "order by T.ticketPrice;"
 
         answer = []
         try:
