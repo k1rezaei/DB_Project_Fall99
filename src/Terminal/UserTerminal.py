@@ -375,7 +375,7 @@ class UserTerminal(Terminal):
 
     def query_future_flights(self):
         return '''
-                select T.code, O.orderNo, T.time, T.startingCity, T.targetCity, 
+                select T.code, O.orderNo, T.time, T.startCity, T.targetCity, 
                         T.ticketPrice, T.airplaneCode, O.seatNo ,O.paymentStatus
                 from TRAVEL as T, ORDER_TABLE as O
                 where clock_timestamp() < T.time
