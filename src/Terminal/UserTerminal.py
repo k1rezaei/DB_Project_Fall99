@@ -377,8 +377,8 @@ class UserTerminal(Terminal):
         # TODO in doroste too postgresql? injori enter mizanan?
         query_comment = ''
         for i in range(len(comment)):
-            c=comment[i]
-            if i!=0:
+            c = comment[i]
+            if i != 0:
                 query_comment += '\\n'
             query_comment += c
 
