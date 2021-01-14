@@ -63,8 +63,8 @@ def insert(connection, cursor):
         
         insert into travel values('0', '2021-01-12 01:45:00', 'Tehran', 'Mashhad', 100, '0', '0');
         insert into travel values('1', '2021-01-10 01:35:00', 'Tehran', 'Ahvaz', 500, '1', '1');
-        insert into travel values('1', '2021-01-20 02:35:00', 'Ahvaz', 'Mashhad', 200, '1', '0');
-        insert into travel values('2', '2021-01-10 16:35:00', 'Mashhad', 'Tehran', 60, '2', '1');
+        insert into travel values('2', '2021-01-20 02:35:00', 'Ahvaz', 'Mashhad', 200, '1', '0');
+        insert into travel values('3', '2021-01-10 16:35:00', 'Mashhad', 'Tehran', 60, '2', '1');
 
         insert into flight_crew values('2', '0');
         insert into flight_crew values('2', '1');
@@ -98,7 +98,7 @@ def insert(connection, cursor):
         insert into order_table values('100', '1', 'Paid','0', 80, '1', '0');
         insert into order_table values('101', '0', 'Paid','0', 70, '2', '0');
         
-        insert into order_table values('101', '0', 'Paid','1', 60, '0', '1');
+        insert into order_table values('101', '1', 'Paid','1', 60, '0', '1');
         insert into order_table values('102', '0', 'Paid','1', 100, '1', '1');
         insert into order_table values('102', '1', 'Paid','1', 50, '2', '1');
         
