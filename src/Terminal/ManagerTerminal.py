@@ -18,8 +18,9 @@ class ManagerTerminal(Terminal):
                              , '[9] See entity lists'
                              , '[10] Give salary to employees'
                              , '[11] Add employee'
-                             , '[12] Insert Crew to Flight'
-                             , '[13] Exit'
+                             , '[12] Insert crew to flight'
+                             , '[13] Remove unpaid orders'
+                             , '[14] Exit'
                              )
         query = int(input())
         if query == 1:
@@ -47,6 +48,8 @@ class ManagerTerminal(Terminal):
         elif query == 12:
             self.manager_add_flight_crew()
         elif query == 13:
+            self.manager_remove_unpaid_orders()
+        elif query == 14:
             return
         else:
             self.manager_main()
@@ -338,3 +341,15 @@ class ManagerTerminal(Terminal):
             print("Error while inserting fight crew", error)
 
         self.manager_main()
+
+    def manager_remove_unpaid_orders(self):
+        Terminal.fancy_print('Enter Travel code')
+        code = input()
+
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_insert_flight_crew_query(
+                    travel_code, employee_code))
+            Terminal.fancy_print("inserting flight crew successful")
+        except (Exception, Error) as error:
+            print("Error while inserting fight crew", error)

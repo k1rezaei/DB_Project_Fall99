@@ -107,6 +107,12 @@ def get_insert_flight_crew_query(travel_code, employee_code):
     return query
 
 
+def get_remove_unpaid_orders_query(travel_code):
+    query = 'DELETE FROM ORDER_TABLE WHERE travelCode = "' + travel_code +\
+            '" and paymentStatus = "NotPaid"'
+    return query
+
+
 if __name__ == '__main__':
     print(get_add_flight_query('10', '2021/10/02', 'tehran', 'mashahd', 10, '1', '1'))
     print(get_add_discount_query('10', '10', 70, '2010/10/10'))
@@ -123,3 +129,4 @@ if __name__ == '__main__':
     print(get_captains_score_query())
     print(get_insert_employee_query('1010', 'Keivan', 'Cap', '2020', 1000, 0))
     print(get_insert_flight_crew_query('100', '1000'))
+    print(get_remove_unpaid_orders_query('100'))
