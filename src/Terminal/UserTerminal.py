@@ -482,8 +482,7 @@ class UserTerminal(Terminal):
     def query_use_discount(self, discount_no, order_no):
         return '''
                     update DISCOUNT
-                    set customerOrderNC = "''' + self.current_NC + '''",
-                        orderNo = "''' + order_no + '''"
+                    set orderNo = "''' + order_no + '''"
                     where customerNC = "''' + self.current_NC + '''"
                     and discountNo = "''' + discount_no + '''"
                     ;
@@ -492,8 +491,7 @@ class UserTerminal(Terminal):
     def query_set_discount_to_null(self):
         return '''
                     update DISCOUNT
-                    set customerOrderNC = null,
-                        Order_No = null
+                    set Order_No = null
                     where customerNC = "''' + self.current_NC + '''"
                     ;
                 '''
