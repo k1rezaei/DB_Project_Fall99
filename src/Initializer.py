@@ -14,7 +14,7 @@ def delete_user(cursor):
 
 
 def create_user(cursor):
-    cursor.execute("CREATE USER customer_user WITH PASSWORD 'userpass';")
+    #cursor.execute("CREATE USER customer_user WITH PASSWORD 'userpass';")
     cursor.execute('''
             GRANT ALL PRIVILEGES ON CUSTOMER TO customer_user;
             GRANT ALL PRIVILEGES ON COMMENT TO customer_user;

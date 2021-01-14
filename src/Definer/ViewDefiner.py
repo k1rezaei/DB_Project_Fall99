@@ -26,7 +26,7 @@ class UserView(ViewDefiner):
 
     def create_view_discount(self):
         query = '''CREATE VIEW DiscountUView (customerNC, discountNo, percent,
-                    expirationTime, orderNo, customerOrderNC)
+                    expirationTime, orderNo)
                     AS SELECT * FROM DISCOUNT'''
         self.execute_create_view_query(query, 'DiscountUView')
 
