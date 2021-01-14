@@ -348,8 +348,7 @@ class ManagerTerminal(Terminal):
 
         try:
             self.execute_database_query(
-                ManagerQueries.get_insert_flight_crew_query(
-                    travel_code, employee_code))
-            Terminal.fancy_print("inserting flight crew successful")
+                ManagerQueries.get_remove_unpaid_orders_query(code))
+            Terminal.fancy_print("removing unpaid orders successful")
         except (Exception, Error) as error:
-            print("Error while inserting fight crew", error)
+            print("Error while removing unpaid orders", error)
