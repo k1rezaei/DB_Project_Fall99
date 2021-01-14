@@ -117,11 +117,30 @@ def triggers(cursor):
         EXECUTE PROCEDURE total_salary_increasing();
     '''
 
+    insert_travel_airplane_city = '''
+    CREATE OR REPLACE FUNCTION travel_airplane_city()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+    IF NEW.startCity != (SELECT city FROM AIRPLANE WHERE NEW.airplaneCode = code) THEN
+        RAISE EXCEPTION 'airplane is not in start city!';
+    END IF;
+    RETURN NEW;
+    END;
+    $$;
+    CREATE TRIGGER insert_travel_airplane_city BEFORE INSERT ON TRAVEL
+        FOR EACH ROW
+        EXECUTE PROCEDURE travel_airplane_city();
+    '''
+
     cursor.execute(insert_travel_time)
     cursor.execute(insert_travel_captain)
     cursor.execute(insert_flight_crew)
     cursor.execute(insert_discount)
     cursor.execute(increasing_total_salary)
+    cursor.execute(insert_travel_airplane_city)
 
 
 def insert(cursor):

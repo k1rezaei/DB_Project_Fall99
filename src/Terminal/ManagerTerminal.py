@@ -20,7 +20,8 @@ class ManagerTerminal(Terminal):
                              , '[11] Add employee'
                              , '[12] Insert crew to flight'
                              , '[13] Remove unpaid orders'
-                             , '[14] Exit'
+                             , '[14] Change airplane city'
+                             , '[15] Exit'
                              )
         query = int(input())
         if query == 1:
@@ -50,6 +51,8 @@ class ManagerTerminal(Terminal):
         elif query == 13:
             self.manager_remove_unpaid_orders()
         elif query == 14:
+            self.manager_change_airplane_city()
+        elif query == 15:
             return
         else:
             self.manager_main()
@@ -370,6 +373,21 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("removing unpaid orders successful")
         except (Exception, Error) as error:
             print("Error while removing unpaid orders", error)
+            self.connection.commit()
+
+        self.manager_back_to_main()
+
+    def manager_change_airplane_city(self):
+        Terminal.fancy_print('Enter airplane code and desired city')
+        code = input()
+        city = input()
+
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_change_airplane_city_query(code, city))
+            Terminal.fancy_print("changing city successful")
+        except (Exception, Error) as error:
+            print("Error while changing city", error)
             self.connection.commit()
 
         self.manager_back_to_main()

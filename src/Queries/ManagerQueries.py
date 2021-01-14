@@ -113,6 +113,11 @@ def get_remove_unpaid_orders_query(travel_code):
     return query
 
 
+def get_change_airplane_city_query(code, city):
+    query = 'UPDATE AIRPLANE SET city = "' + city + '" WHERE code = "' + code + '";'
+    return query
+
+
 if __name__ == '__main__':
     print(get_add_flight_query('10', '2021/10/02', 'tehran', 'mashahd', 10, '1', '1'))
     print(get_add_discount_query('10', '10', 70, '2010/10/10'))
@@ -130,3 +135,4 @@ if __name__ == '__main__':
     print(get_insert_employee_query('1010', 'Keivan', 'Cap', '2020', 1000, 0))
     print(get_insert_flight_crew_query('100', '1000'))
     print(get_remove_unpaid_orders_query('100'))
+    print(get_change_airplane_city_query('10', '1000'))
