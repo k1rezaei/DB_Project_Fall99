@@ -55,7 +55,7 @@ def get_add_discount_query(nc, discount_no, percent, expiration_time):
     query = '''INSERT INTO DISCOUNT (customerNC, discountNo, percent, 
                 expirationTime, orderNo, customerOrderNC) VALUES '''
     query += '("' + nc + '", "' + discount_no + '", ' + str(percent) + \
-             ', "' + expiration_time + '", null, null);'
+             ', "' + expiration_time + '", null);'
     return query
 
 

@@ -92,9 +92,9 @@ def create_seat(cursor):
 def create_order(cursor):
     query = '''CREATE TABLE ORDER_TABLE(
                 customerNC varchar(10), orderNo varchar(10), 
-                paymentStatus varchar(10) NOT NULL, travelCode varchar(10),
-                score real, seatNo varchar(10),
-                airplaneCode varchar(10),
+                paymentStatus varchar(10) NOT NULL, travelCode varchar(10) not null,
+                score real, seatNo varchar(10) not null,
+                airplaneCode varchar(10) not null,
                 check ( score >= 0 and score <= 100),
                 check ( paymentStatus in('Paid', 'NotPaid') ),
                 primary key (customerNC, orderNo),
