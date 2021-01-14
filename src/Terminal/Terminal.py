@@ -14,12 +14,13 @@ def get_first(query: str):
 
 def execute_data_base_query(cursor, connection, query):
     new_query = change(query)
-    cursor.execute(change(query))
-    result = []
-    if get_first(new_query) == 's' or get_first(new_query) == 'S':
-        result = cursor.fetchall()
-
-    connection.commit()
+    try:
+        cursor.execute(change(query))
+        result = []
+        if get_first(new_query) == 's' or get_first(new_query) == 'S':
+            result = cursor.fetchall()
+    finally:
+        connection.commit()
     return result
 
 
@@ -46,13 +47,23 @@ class Terminal:
 
     @staticmethod
     def table_print(table, header):
-        out = ""
-        for x in header:
-            out += str(x) + "\t"
-        print(out)
+        lens = []
+        for t in header:
+            lens.append(len(t))
+
+        new_table = []
+        for row in table:
+            new_row = []
+            for i in range(len(row)):
+                new_row.append(str(row[i]))
+                lens[i] = max(lens[i], len(new_row[i]))
+            new_table.append(new_row)
+
+        format_row = ""
+        for l in lens:
+            format_row += '{:>' + str(l + 2) + '}'
+
+        print(format_row.format(*header))
 
         for row in table:
-            out = ""
-            for item in row:
-                out += str(item) + "\t"
-            print(out)
+            print(format_row.format(*new_row))
