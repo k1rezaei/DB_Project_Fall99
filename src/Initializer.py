@@ -37,6 +37,7 @@ def triggers(cursor):
     IF NEW.time < clock_timestamp() THEN
         RAISE EXCEPTION 'cannot insert expired flight';
     END IF;
+    RETURN NEW;
     END;
     $$;
     CREATE TRIGGER insert_travel_time BEFORE INSERT ON TRAVEL
@@ -54,6 +55,7 @@ def triggers(cursor):
     IF NOT NEW.captainCode IN (SELECT code FROM EMPLOYEE WHERE jobType = 'Captain') THEN
         RAISE EXCEPTION 'captain is not valid';
     END IF;
+    RETURN NEW;
     END;
     $$;
     CREATE TRIGGER insert_travel_captain BEFORE INSERT ON TRAVEL
@@ -71,6 +73,7 @@ def triggers(cursor):
     IF clock_timestamp() > ALL(SELECT time FROM TRAVEL where code=NEW.travelCode) THEN
         RAISE EXCEPTION 'flight is passed, cannot add crew';
     END IF;
+    RETURN NEW;
     END;
     $$;
     CREATE TRIGGER insert_flight_crew BEFORE INSERT ON FLIGHT_CREW
@@ -88,6 +91,7 @@ def triggers(cursor):
     IF clock_timestamp() > NEW.expirationTime THEN
         RAISE EXCEPTION 'cannot give expired discount!';
     END IF;
+    RETURN NEW;
     END;
     $$;
     CREATE TRIGGER insert_discount BEFORE INSERT ON DISCOUNT
@@ -105,6 +109,7 @@ def triggers(cursor):
     IF NEW.totalSalary < OLD.totalSalary THEN
         RAISE EXCEPTION 'salary is decreasing!';
     END IF;
+    RETURN NEW;
     END;
     $$;
     CREATE TRIGGER increasing_total_salary BEFORE UPDATE OF totalSalary ON EMPLOYEE
