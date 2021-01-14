@@ -28,7 +28,7 @@ def create_comment(cursor):
 
 def create_employee(cursor):
     query = '''CREATE TABLE EMPLOYEE(
-            code varchar(10), name varchar(20), jobType varchar(10),
+            code varchar(10), name varchar(20), jobType varchar(10) not null,
             employmentYear varchar(4), salary real NOT NULL, totalSalary real NOT NULL,
             CHECK (salary >= 0),
             CHECK (totalSalary >= 0),
@@ -59,9 +59,10 @@ def create_flight_crew(cursor):
 
 def create_discount(cursor):
     query = '''CREATE TABLE DISCOUNT(
-            customerNC varchar(10), discountNo varchar(10), 
+            customerNC varchar(10), discountNo varchar(10),
             percent real NOT NULL, expirationTime timestamp NOT NULL,
             orderNo varchar(10), customerOrderNC varchar (10),
+            check (percent >= 0 and percent <= 100),
             primary key (customerNC, discountNo),
             foreign key (customerNC) references CUSTOMER(NC),
             foreign key (orderNo, customerOrderNC) references ORDER_TABLE(orderNo, customerNC));'''
@@ -73,7 +74,7 @@ def create_airplane(cursor):
                 code varchar(10),
                 capacity integer NOT NULL,
                 model varchar(10) NOT NULL,
-                city varchar(10),
+                city varchar(10) NOT NULL,
                 check ( capacity > 0 ),
                 primary key (code));'''
     execute_create_table_query(cursor, query, 'AIRPLANE')
@@ -94,8 +95,8 @@ def create_order(cursor):
                 paymentStatus varchar(10) NOT NULL, travelCode varchar(10),
                 score real, seatNo varchar(10),
                 airplaneCode varchar(10),
-                check ( score >= 0 ),
-                check ( paymentStatus in('Paid','NotPaid') ),
+                check ( score >= 0 and score <= 100),
+                check ( paymentStatus in('Paid', 'NotPaid') ),
                 primary key (customerNC, orderNo),
                 foreign key (customerNC) references CUSTOMER(NC),
                 foreign key (travelCode) references TRAVEL(code),
