@@ -40,7 +40,7 @@ def query_empty_seats(travel_code):
 def query_paymet_status(order_no, travel_code):
     return '''
             select paymentStatus 
-            from ORDER
+            from order_table
             where travelCode = "''' + travel_code + '''"
             and orderNo = "''' + order_no + '''"
         ;'''

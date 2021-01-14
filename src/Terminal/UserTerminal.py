@@ -235,16 +235,15 @@ class UserTerminal(Terminal):
         else:
             Terminal.table_print(answer, ['airplaneCode', 'seatNo'])
 
-            Terminal.fancy_print("Enter airplane code:")
-            airplane_code = input()
+            airplane_code = answer[0][0]
 
             Terminal.fancy_print("Enter seat no:")
             seat_no = input()
 
-            Terminal.fancy_print("Enter order no:")
-            order_no = input()
+            order_no = str(self.execute_database_query(self.query_order_length())[0][0])
 
             self.execute_database_query(self.query_insert_order(airplane_code, order_no, seat_no, travel_code))
+
             discounts = []
             if self.discounts():
                 Terminal.fancy_print("Do you want to use your discounts",
@@ -261,9 +260,12 @@ class UserTerminal(Terminal):
                     flag = True
                     for discount_no in discounts:
                         flag = flag and self.execute_database_query(self.query_is_available_discount(discount_no))[0][0]
-
                     if flag:
                         price *= self.get_percent_discount(discounts)
+                    else:
+                        Terminal.fancy_print("Choosen discounts aren't available!")
+                        self.execute_database_query(self.query_delete_order(order_no))
+                        return
 
             if self.get_money() < price:
                 self.execute_database_query(self.query_delete_order(order_no))
@@ -278,6 +280,12 @@ class UserTerminal(Terminal):
                 self.execute_database_query(self.query_set_order_status(order_no, 'Paid'))
                 self.fancy_print("You bought the ticket!",
                                  "Price: " + str(price) + "$")
+
+    def query_order_length(self):
+        return '''
+                select count(*)
+                from order_table
+            '''
 
     def query_delete_order(self, order_no):
         return '''
@@ -331,7 +339,7 @@ class UserTerminal(Terminal):
                 from DISCOUNT as D
                 where D.customerNc = "''' + self.current_NC + '''"
                 and D.orderNo is null
-                and clock_timestamp() > D.expirationTime;
+                and clock_timestamp() < D.expirationTime;
                 '''
 
     def query_change_money(self, new_money):
@@ -402,7 +410,7 @@ class UserTerminal(Terminal):
     def query_percent_single_discount(self, discount_no):
         return '''
                     select percent 
-                    from DISOUNT 
+                    from DISCOUNT as D
                     where D.customerNC = "''' + self.current_NC + '''"
                     and D.discountNo = "''' + discount_no + '''"
                     ;
@@ -410,20 +418,20 @@ class UserTerminal(Terminal):
 
     def query_use_discount(self, discount_no, order_no):
         return '''
-                    update DISCOUNT as D
-                    set D.customerOrderNC = "''' + self.current_NC + '''",
-                        D.Order_No = "''' + order_no + '''"
-                    where D.customerNC = "''' + self.current_NC + '''"
-                    and D.discountNo = "''' + discount_no + '''"
+                    update DISCOUNT
+                    set customerOrderNC = "''' + self.current_NC + '''",
+                        orderNo = "''' + order_no + '''"
+                    where customerNC = "''' + self.current_NC + '''"
+                    and discountNo = "''' + discount_no + '''"
                     ;
                 '''
 
     def query_set_discount_to_null(self):
         return '''
-                    update DISCOUNT as D
-                    set D.customerOrderNC = null,
-                        D.Order_No = null
-                    where D.customerNC = "''' + self.current_NC + '''"
+                    update DISCOUNT
+                    set customerOrderNC = null,
+                        Order_No = null
+                    where customerNC = "''' + self.current_NC + '''"
                     ;
                 '''
 
