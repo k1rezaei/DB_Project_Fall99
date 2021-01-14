@@ -94,13 +94,11 @@ def create_order(cursor):
                 customerNC varchar(10), orderNo varchar(10), 
                 paymentStatus varchar(10) NOT NULL, travelCode varchar(10) not null,
                 score real, seatNo varchar(10) not null,
-                airplaneCode varchar(10) not null,
                 check ( score >= 0 and score <= 100),
                 check ( paymentStatus in('Paid', 'NotPaid') ),
                 primary key (customerNC, orderNo),
                 foreign key (customerNC) references CUSTOMER(NC),
-                foreign key (travelCode) references TRAVEL(code),
-                foreign key (airplaneCode, seatNo) references SEAT(airplaneCode,seatNo));'''
+                foreign key (travelCode) references TRAVEL(code));'''
     execute_create_table_query(cursor, query, 'ORDER_TABLE')
 
 
