@@ -313,7 +313,7 @@ class UserTerminal(Terminal):
                 for discount_no in discounts:
                     flag = flag and self.execute_database_query(self.query_is_available_discount(discount_no))[0][0]
                 if flag:
-                    price *= self.get_percent_discount(discounts)
+                    price *= self.get_percent_discount_by_id(discounts)
                 else:
                     Terminal.fancy_print("Choosen discounts aren't available!")
                     self.execute_database_query(self.query_delete_order(order_no))
@@ -334,9 +334,14 @@ class UserTerminal(Terminal):
 
     def get_percent_discount(self, discounts):
         mult_discounts = 1.0
-        print(discounts)
         for discount in discounts:
             mult_discounts *= discount[0] / 100.0
+        return mult_discounts
+
+    def get_percent_discount_by_id(self, discounts):
+        mult_discounts = 1.0
+        for discount_no in discounts:
+            mult_discounts *= self.execute_database_query(self.query_percent_single_discount(discount_no))[0][0] / 100.0
         return mult_discounts
 
     def get_travel_price(self, travel_code):
