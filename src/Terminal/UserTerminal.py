@@ -158,7 +158,7 @@ class UserTerminal(Terminal):
             Terminal.fancy_print('No flight to display!')
         else:
             Terminal.table_print(answer, ["code", "time", "startCity", "targetCity", "ticketPrice",
-                                          "airplaneCode", "captainCode", "avgScore", "emptySeats"])
+                                          "airplaneCode", "captainCode","airplaneCode", "avgScore", "emptySeats"])
 
     def user_personal_past_flights(self):
         answer = self.execute_database_query(self.query_personal_past_flights())
