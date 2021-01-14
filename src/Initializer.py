@@ -28,59 +28,80 @@ def create_user(cursor):
 
 def insert(connection, cursor):
     cursor.execute('''
-        insert into airplane values('210', 3, 'EF715', 'Munikh');
-        insert into airplane values('211', 3, 'EF717', 'NewYork');
-        insert into airplane values('212', 3, 'EF718', 'NewYork');
-        insert into airplane values('213', 3, 'EF206', 'Tehran');
-        insert into airplane values('214', 3, 'EH718', 'Istanbul');
+        insert into airplane values('0', 3, 'EF715', 'Munikh');
+        insert into airplane values('1', 3, 'EF717', 'NewYork');
+        insert into airplane values('2', 3, 'EF718', 'NewYork');
+        insert into airplane values('3', 3, 'EF206', 'Tehran');
+        insert into airplane values('4', 3, 'EH718', 'Istanbul');
 
-        insert into seat values('100', '210');
-        insert into seat values('101', '210');
-        insert into seat values('102', '210');
+        insert into seat values('0', '0');
+        insert into seat values('1', '0');
+        insert into seat values('2', '0');
 
-        insert into seat values('100', '211');
-        insert into seat values('101', '211');
-        insert into seat values('102', '211');
+        insert into seat values('0', '1');
+        insert into seat values('1', '1');
+        insert into seat values('2', '1');
 
-        insert into seat values('100', '212');
-        insert into seat values('101', '212');
-        insert into seat values('102', '212');
+        insert into seat values('0', '2');
+        insert into seat values('1', '2');
+        insert into seat values('2', '2');
 
-        insert into seat values('100', '213');
-        insert into seat values('101', '213');
-        insert into seat values('102', '213');
+        insert into seat values('0', '3');
+        insert into seat values('1', '3');
+        insert into seat values('2', '3');
 
-        insert into seat values('100', '214');
-        insert into seat values('101', '214');
-        insert into seat values('102', '214');
+        insert into seat values('0', '4');
+        insert into seat values('1', '4');
+        insert into seat values('2', '4');
 
-        insert into employee values('123', 'Seyed', 'Captain', '1396', 1500, 0);
-        insert into employee values('124', 'Keivan', 'Captain', '1396', 1000, 0);
-        insert into employee values('125', 'Hasan Agha', 'Mehmandar', '1396', 100, 0);
-        insert into employee values('126', 'Mina', 'Mehmandar', '1396', 100, 0);
+        insert into employee values('0', 'Ahmad Ahmadi', 'Captain', '2018', 1500, 15000);
+        insert into employee values('1', 'Ali Alavi', 'Captain', '2019', 1000, 10000);
+        insert into employee values('2', 'Reza Razavi', 'Technician', '2020', 300, 900);
+        insert into employee values('3', 'Hasan Hasani', 'Crew', '2019', 100, 1000);
+        insert into employee values('4', 'Sima Bina', 'Crew', '2019', 100, 1500);
+        insert into employee values('5', 'Mahmood Tajik', 'Crew', '2019', 100, 1000);
+        
+        insert into travel values('0', '2021-01-12 01:45:00', 'Tehran', 'Mashhad', 100, '0', '0');
+        insert into travel values('1', '2021-01-10 01:35:00', 'Tehran', 'Ahvaz', 500, '1', '1');
+        insert into travel values('2', '2021-01-20 02:35:00', 'Ahvaz', 'Mashhad', 200, '1', '0');
+        insert into travel values('3', '2021-01-10 16:35:00', 'Mashhad', 'Tehran', 60, '2', '1');
 
-        insert into travel values('100', '2020-02-21 01:45:00', 'Tehran', 'Mashhad', 6, '210', '123');
-        insert into travel values('101', '2021-02-21 01:35:00', 'Tehran', 'Mashhad', 7, '213', '123');
-        insert into travel values('102', '2021-02-21 02:35:00', 'Tehran', 'Mashhad', 8, '212', '124');
-        insert into travel values('103', '2021-02-21 16:35:00', 'Mashhad', 'Tehran', 5, '210', '124');
+        insert into flight_crew values('2', '0');
+        insert into flight_crew values('2', '1');
+        insert into flight_crew values('2', '2');
+                
+        insert into flight_crew values('3', '1');
+        insert into flight_crew values('3', '2');
 
-        insert into flight_crew values('125', '100');
-        insert into flight_crew values('125', '101');
-        insert into flight_crew values('126', '102');
-        insert into flight_crew values('125', '103');
+        insert into flight_crew values('4', '0');
+        insert into flight_crew values('4', '3');
+        
+        insert into flight_crew values('5', '0');
+        insert into flight_crew values('5', '1');
+        insert into flight_crew values('5', '2');
+        
 
-        insert into customer values('102', '123', 'Shayan', 'ttt', 0);
-        insert into customer values('103', '123', 'Hasan', 'sss', 10);
-        insert into customer values('104', '123', 'Ray', 'rrr', 10);
+        insert into customer values('100', '123', 'Shayan', 'Hosseini', 50);
+        insert into customer values('101', '123', 'Mohammad', 'Shafiee', 10);
+        insert into customer values('102', '123', 'Tooraj', 'Falsafi', 100);
 
-        insert into comment values('102', '1', 'Che vazeshe agha havapeymatoon booye goh mide,\n zire sandalia adams chasbide\n mehmandara ba capitan mafia bazi mikonan :/');
-        insert into comment values('103', '2', 'Chahe dastshooyi havapeymaye EF206 gerefte!');
+        insert into comment values('100', '1', 'Perfect Flights!');
+        insert into comment values('101', '2', 'Awful Airplane!');
 
-        insert into discount values('102', '1', 90, '2021-02-21 16:35:00', null, null);
-        insert into discount values('102', '2', 91, '2020-02-21 16:35:00', null, null);
-        insert into discount values('102', '3', 84, '2021-02-21 16:35:00', null, null);
-        insert into discount values('102', '4', 95, '2021-02-21 16:35:00', null, null);
-        insert into discount values('102', '5', 70, '2021-02-21 16:35:00', null, null);
+        insert into discount values('100', '1', 90, '2021-02-21 16:35:00', null, null);
+        insert into discount values('100', '2', 91, '2020-02-21 16:35:00', null, null);
+        insert into discount values('101', '1', 84, '2021-02-21 16:35:00', null, null);
+        insert into discount values('101', '2', 95, '2021-02-21 16:35:00', null, null);
+        insert into discount values('102', '1', 70, '2021-02-21 16:35:00', null, null);
+        
+        insert into order_table values('100', '0', 'Paid','0', 100, '0', '0');
+        insert into order_table values('100', '1', 'Paid','0', 80, '1', '0');
+        insert into order_table values('101', '0', 'Paid','0', 70, '2', '0');
+        
+        insert into order_table values('101', '1', 'Paid','1', 60, '0', '1');
+        insert into order_table values('102', '0', 'Paid','1', 100, '1', '1');
+        insert into order_table values('102', '1', 'Paid','1', 50, '2', '1');
+        
     ''')
 
     connection.commit()
@@ -93,19 +114,19 @@ if __name__ == '__main__':
                                       host="127.0.0.1",
                                       database=my_database)
         cursor = connection.cursor()
-        #insert(connection, cursor)
 
         user_view = UserView(cursor)
         manager_view = ManagerView(cursor)
 
         user_view.drop_all()
         manager_view.drop_all()
-        #drop_tables(cursor)'
+        drop_tables(cursor)
 
-        #create_tables(cursor)
+        create_tables(cursor)
         user_view.create_all()
         manager_view.create_all()
         create_user(cursor)
+        insert(connection, cursor)
 
         connection.commit()
 
