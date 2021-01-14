@@ -1,8 +1,8 @@
-def query_discount_set_null(order_no, travel_code):
+def query_discount_set_null(order_no, customer_NC):
     return '''
                 update DISCOUNT 
                 set orderNo = null, customerOrderNC = null
-                where travelCode = "''' + travel_code + '''"
+                where customerNC = "''' + customer_NC + '''"
                 and orderNo = "''' + order_no + '''"
                 ;
             '''
@@ -40,16 +40,16 @@ def query_empty_seats(travel_code):
 def query_paymet_status(order_no, travel_code):
     return '''
             select paymentStatus 
-            from ORDER
+            from order_table
             where travelCode = "''' + travel_code + '''"
             and orderNo = "''' + order_no + '''"
         ;'''
 
 
-def query_discount_percents(order_no, travel_code):
+def query_discount_percents(order_no, customer_NC):
     return '''
                 select percent
                 from DISCOUNT
-                where travelCode = "''' + travel_code + '''"
+                where customerNC = "''' + customer_NC + '''"
                 and orderNo = "''' + order_no + '''"
             ;'''
