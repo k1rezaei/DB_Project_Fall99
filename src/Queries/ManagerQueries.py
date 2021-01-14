@@ -53,7 +53,7 @@ def get_customers_by_travels():
 
 def get_add_discount_query(nc, discount_no, percent, expiration_time):
     query = '''INSERT INTO DISCOUNT (customerNC, discountNo, percent, 
-                expirationTime, orderNo, customerOrderNC) VALUES '''
+                expirationTime, orderNo) VALUES '''
     query += '("' + nc + '", "' + discount_no + '", ' + str(percent) + \
              ', "' + expiration_time + '", null);'
     return query
