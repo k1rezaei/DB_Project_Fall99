@@ -65,5 +65,5 @@ class Terminal:
 
         print(format_row.format(*header))
 
-        for row in table:
-            print(format_row.format(*new_row))
+        for row in new_table:
+            print(format_row.format(*row))
