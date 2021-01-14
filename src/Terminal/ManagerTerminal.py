@@ -352,3 +352,5 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("removing unpaid orders successful")
         except (Exception, Error) as error:
             print("Error while removing unpaid orders", error)
+
+        self.manager_back_to_main()
