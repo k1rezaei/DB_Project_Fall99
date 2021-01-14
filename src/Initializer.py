@@ -112,6 +112,13 @@ def triggers(cursor):
         EXECUTE PROCEDURE total_salary_increasing();
     '''
 
+    cursor.execute(insert_travel_time)
+    cursor.execute(insert_travel_captain)
+    cursor.execute(insert_flight_crew)
+    cursor.execute(insert_discount)
+    cursor.execute(increasing_total_salary)
+
+
 def insert(cursor):
     cursor.execute('''
         insert into airplane values('0', 3, 'EF715', 'Munikh');
@@ -211,6 +218,7 @@ if __name__ == '__main__':
         manager_view.create_all()
         create_user(cursor)
         insert(cursor)
+        triggers(cursor)
 
         connection.commit()
 

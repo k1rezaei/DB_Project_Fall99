@@ -47,7 +47,7 @@ class UserView(ViewDefiner):
                     AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
                     WHERE A.code = O.airplaneCode
                     GROUP BY A.code
-                    order by avgScore DESC)
+                    )
                     UNION 
                     (SELECT A.code, 0 FROM AIRPLANE AS A
                     WHERE NOT EXISTS(SELECT * from ORDER_TABLE WHERE airplaneCode = A.code)
@@ -130,7 +130,7 @@ class ManagerView(ViewDefiner):
                     AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
                     WHERE A.code = O.airplaneCode
                     GROUP BY A.code
-                    order by avgScore DESC)
+                    )
                     UNION 
                     (SELECT A.code, 0 FROM AIRPLANE AS A
                     WHERE NOT EXISTS(SELECT * from ORDER_TABLE WHERE airplaneCode = A.code)
@@ -146,8 +146,7 @@ class ManagerView(ViewDefiner):
                                         and fc.employeeCode = E.code
                                         )
                     FROM EMPLOYEE AS E
-                    where E.jobType != 'Captain'
-                    order by avgScore DESC;
+                    where E.jobType != 'Captain';
                 '''
         self.execute_create_view_query(query, 'CrewScoreMView')
 
@@ -158,8 +157,7 @@ class ManagerView(ViewDefiner):
                                         where T.code = O.travelCode
                                         and T.captainCode = E.code)
                     FROM EMPLOYEE AS E
-                    where E.jobType = 'Captain'
-                    order by avgScore DESC;
+                    where E.jobType = 'Captain';
                 '''
         self.execute_create_view_query(query, 'CaptainScoreMView')
 
