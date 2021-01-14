@@ -26,7 +26,93 @@ def create_user(cursor):
         ''')
 
 
-def insert(connection, cursor):
+def triggers(cursor):
+    insert_travel_time = '''
+    CREATE OR REPLACE FUNCTION travel_time_check()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+    IF NEW.time < clock_timestamp() THEN
+        RAISE EXCEPTION 'cannot insert expired flight';
+    END IF;
+    END;
+    $$;
+    CREATE TRIGGER insert_travel_time BEFORE INSERT ON TRAVEL
+        FOR EACH ROW
+        EXECUTE PROCEDURE travel_time_check();
+    '''
+
+    insert_travel_captain = '''
+    CREATE OR REPLACE FUNCTION travel_captain_check()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+    IF NOT NEW.captainCode IN (SELECT code FROM EMPLOYEE WHERE jobType = 'Captain') THEN
+        RAISE EXCEPTION 'captain is not valid';
+    END IF;
+    END;
+    $$;
+    CREATE TRIGGER insert_travel_captain BEFORE INSERT ON TRAVEL
+        FOR EACH ROW
+        EXECUTE PROCEDURE travel_captain_check();
+    '''
+
+    insert_flight_crew = '''
+    CREATE OR REPLACE FUNCTION flight_crew_time_check()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+    IF clock_timestamp() > ALL(SELECT time FROM TRAVEL where code=NEW.travelCode) THEN
+        RAISE EXCEPTION 'flight is passed, cannot add crew';
+    END IF;
+    END;
+    $$;
+    CREATE TRIGGER insert_flight_crew BEFORE INSERT ON FLIGHT_CREW
+        FOR EACH ROW
+        EXECUTE PROCEDURE flight_crew_time_check();
+    '''
+
+    insert_discount = '''
+    CREATE OR REPLACE FUNCTION discount_time()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+    IF clock_timestamp() > NEW.expirationTime THEN
+        RAISE EXCEPTION 'cannot give expired discount!';
+    END IF;
+    END;
+    $$;
+    CREATE TRIGGER insert_discount BEFORE INSERT ON DISCOUNT
+        FOR EACH ROW
+        EXECUTE PROCEDURE discount_time();
+    '''
+
+    increasing_total_salary = '''
+    CREATE OR REPLACE FUNCTION total_salary_increasing()
+    RETURNS TRIGGER 
+    LANGUAGE PLPGSQL
+    AS
+    $$
+    BEGIN
+    IF NEW.totalSalary < OLD.totalSalary THEN
+        RAISE EXCEPTION 'salary is decreasing!';
+    END IF;
+    END;
+    $$;
+    CREATE TRIGGER increasing_total_salary BEFORE UPDATE OF totalSalary ON EMPLOYEE
+        FOR EACH ROW
+        EXECUTE PROCEDURE total_salary_increasing();
+    '''
+
+def insert(cursor):
     cursor.execute('''
         insert into airplane values('0', 3, 'EF715', 'Munikh');
         insert into airplane values('1', 3, 'EF717', 'NewYork');
@@ -104,8 +190,6 @@ def insert(connection, cursor):
         
     ''')
 
-    connection.commit()
-
 
 if __name__ == '__main__':
     try:
@@ -126,7 +210,7 @@ if __name__ == '__main__':
         user_view.create_all()
         manager_view.create_all()
         create_user(cursor)
-        insert(connection, cursor)
+        insert(cursor)
 
         connection.commit()
 
