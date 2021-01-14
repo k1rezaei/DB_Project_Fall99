@@ -282,7 +282,7 @@ class UserTerminal(Terminal):
 
             order_no = get_mex_number(self.execute_database_query(self.query_order_no()))
 
-            self.execute_database_query(self.query_insert_order(airplane_code, order_no, seat_no, travel_code))
+            self.execute_database_query(self.query_insert_order(order_no, seat_no, travel_code))
 
             discounts, price = self.payment_choose_discount(order_no, travel_code)
 
@@ -462,12 +462,11 @@ class UserTerminal(Terminal):
                 and O.customerNC = "''' + self.current_NC + '''"
                 ;'''
 
-    def query_insert_order(self, airplane_code, order_no, seat_no, travel_code):
+    def query_insert_order(self, order_no, seat_no, travel_code):
         return '''
                 insert into ORDER_TABLE
                 values ("''' + self.current_NC + '''", "''' + order_no + '''",
-                    'NotPaid', "''' + travel_code + '''", null, "''' + seat_no + '''",
-                    "''' + airplane_code + '''");   
+                    'NotPaid', "''' + travel_code + '''", null, "''' + seat_no + '''");   
             '''
 
     def query_percent_single_discount(self, discount_no):

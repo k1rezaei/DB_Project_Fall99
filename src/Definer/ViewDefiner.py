@@ -26,13 +26,13 @@ class UserView(ViewDefiner):
 
     def create_view_discount(self):
         query = '''CREATE VIEW DiscountUView (customerNC, discountNo, percent,
-                    expirationTime, orderNo, customerOrderNC)
+                    expirationTime, orderNo)
                     AS SELECT * FROM DISCOUNT'''
         self.execute_create_view_query(query, 'DiscountUView')
 
     def create_view_order(self):
         query = '''CREATE VIEW OrderUView (customerNC, orderNo, paymentStatus,
-                            travelCode, score, seatNo, airplaneCode)
+                            travelCode, score, seatNo)
                             AS SELECT * FROM ORDER_TABLE'''
         self.execute_create_view_query(query, 'OrderUView')
 
@@ -44,13 +44,17 @@ class UserView(ViewDefiner):
 
     def create_view_airplane_score(self):
         query = '''CREATE VIEW AirplaneScoreUView (airplaneCode, avgScore)
-                    AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
-                    WHERE A.code = O.airplaneCode
+                    AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O, TRAVEL as T
+                    WHERE A.code = T.airplaneCode
+                    and O.travelCode = T.code
                     GROUP BY A.code
                     )
                     UNION 
-                    (SELECT A.code, 0 FROM AIRPLANE AS A
-                    WHERE NOT EXISTS(SELECT * from ORDER_TABLE WHERE airplaneCode = A.code)
+                    (SELECT A.code, NULL FROM AIRPLANE AS A
+                    WHERE NOT EXISTS(SELECT * 
+                                    from ORDER_TABLE as O, Travel as T
+                                    WHERE T.airplaneCode = A.code
+                                    and O.travelCode = T.code)
                     ));
                 '''
         self.execute_create_view_query(query, 'AirplaneScoreUView')
@@ -113,7 +117,7 @@ class ManagerView(ViewDefiner):
 
     def create_view_order(self):
         query = '''CREATE VIEW OrderMView (customerNC, orderNo, paymentStatus, 
-                    travelCode, score, seatNo, airplaneCode)
+                    travelCode, score, seatNo)
                     AS SELECT * FROM ORDER_TABLE;'''
         self.execute_create_view_query(query, 'OrderMView')
 
@@ -130,13 +134,17 @@ class ManagerView(ViewDefiner):
 
     def create_view_airplane_score(self):
         query = '''CREATE VIEW AirplaneScoreMView (airplaneCode, avgScore)
-                    AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O
-                    WHERE A.code = O.airplaneCode
+                    AS ((SELECT A.code, AVG(O.score) FROM AIRPLANE AS A, ORDER_TABLE AS O, TRAVEL as T
+                    WHERE A.code = T.airplaneCode
+                    and O.travelCode = T.code
                     GROUP BY A.code
                     )
                     UNION 
-                    (SELECT A.code, 0 FROM AIRPLANE AS A
-                    WHERE NOT EXISTS(SELECT * from ORDER_TABLE WHERE airplaneCode = A.code)
+                    (SELECT A.code, NULL FROM AIRPLANE AS A
+                    WHERE NOT EXISTS(SELECT * 
+                                    from ORDER_TABLE as O, Travel as T
+                                    WHERE T.airplaneCode = A.code
+                                    and O.travelCode = T.code)
                     ));
                 '''
         self.execute_create_view_query(query, 'AirplaneScoreMView')
