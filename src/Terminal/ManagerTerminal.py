@@ -20,7 +20,8 @@ class ManagerTerminal(Terminal):
                              , '[11] Add employee'
                              , '[12] Insert crew to flight'
                              , '[13] Remove unpaid orders'
-                             , '[14] Exit'
+                             , '[14] Change airplane city'
+                             , '[15] Exit'
                              )
         query = int(input())
         if query == 1:
@@ -50,6 +51,8 @@ class ManagerTerminal(Terminal):
         elif query == 13:
             self.manager_remove_unpaid_orders()
         elif query == 14:
+            self.manager_change_airplane_city()
+        elif query == 15:
             return
         else:
             self.manager_main()
@@ -77,6 +80,7 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("Flight added successfully!")
         except (Exception, Error) as error:
             print("Error while inserting new flight", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -104,6 +108,7 @@ class ManagerTerminal(Terminal):
 
         except (Exception, Error) as error:
             print("Error while inserting new airplane", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -116,6 +121,7 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("Airplane removed successfully!")
         except (Exception, Error) as error:
             print("Error while removing airplane", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -134,6 +140,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(all_comments, ['customerNC', 'commentNO', 'text'])
         except (Exception, Error) as error:
             print("Error while fetching comments", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -152,6 +159,7 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print('Giving discount successful')
         except (Exception, Error) as error:
             print("Error while inserting discount", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -163,6 +171,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(cities, ['city', '#'])
         except (Exception, Error) as error:
             print("Error while fetching target city data", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -175,6 +184,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(airplanes, ['code', 'capacity', 'model', 'city'])
         except (Exception, Error) as error:
             print("Error while fetching airplanes", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -185,6 +195,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(employees, ['code', 'name', 'job type', 'average score'])
         except (Exception, Error) as error:
             print("Error while fetching employees\' scores", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -195,6 +206,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(airplanes, ['code', 'average score'])
         except (Exception, Error) as error:
             print("Error while fetching airplanes\' scores", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -205,6 +217,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(captains, ['code', 'name', 'average score'])
         except (Exception, Error) as error:
             print("Error while fetching captains\' scores", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -228,6 +241,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(all_customers, ['NC', 'first name', 'last name', '#'])
         except (Exception, Error) as error:
             print("Error while fetching customers\' travels", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -240,6 +254,7 @@ class ManagerTerminal(Terminal):
                                                  'money'])
         except (Exception, Error) as error:
             print("Error while fetching customers", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -251,6 +266,7 @@ class ManagerTerminal(Terminal):
             Terminal.table_print(all_airplanes, ['code', 'capacity', 'model', 'city'])
         except (Exception, Error) as error:
             print("Error while fetching airplanes", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -263,6 +279,7 @@ class ManagerTerminal(Terminal):
                                                  'employment year', 'salary', 'total salary'])
         except (Exception, Error) as error:
             print("Error while fetching employees", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -275,6 +292,7 @@ class ManagerTerminal(Terminal):
                                                'ticket price', 'airplane code', 'captain code'])
         except (Exception, Error) as error:
             print("Error while fetching travels", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -300,6 +318,7 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("Giving salaries successful")
         except (Exception, Error) as error:
             print("Error while giving salaries", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -323,6 +342,7 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("inserting employee successful")
         except (Exception, Error) as error:
             print("Error while inserting employee", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
 
@@ -339,6 +359,7 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("inserting flight crew successful")
         except (Exception, Error) as error:
             print("Error while inserting fight crew", error)
+            self.connection.commit()
 
         self.manager_main()
 
@@ -352,5 +373,21 @@ class ManagerTerminal(Terminal):
             Terminal.fancy_print("removing unpaid orders successful")
         except (Exception, Error) as error:
             print("Error while removing unpaid orders", error)
+            self.connection.commit()
+
+        self.manager_back_to_main()
+
+    def manager_change_airplane_city(self):
+        Terminal.fancy_print('Enter airplane code and desired city')
+        code = input()
+        city = input()
+
+        try:
+            self.execute_database_query(
+                ManagerQueries.get_change_airplane_city_query(code, city))
+            Terminal.fancy_print("changing city successful")
+        except (Exception, Error) as error:
+            print("Error while changing city", error)
+            self.connection.commit()
 
         self.manager_back_to_main()
