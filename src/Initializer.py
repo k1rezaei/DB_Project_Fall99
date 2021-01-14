@@ -205,11 +205,11 @@ def insert(cursor):
         insert into comment values('100', '1', 'Perfect Flights!');
         insert into comment values('101', '2', 'Awful Airplane!');
 
-        insert into discount values('100', '1', 90, '2021-02-21 16:35:00', null, null);
-        insert into discount values('100', '2', 91, '2020-02-21 16:35:00', null, null);
-        insert into discount values('101', '1', 84, '2021-02-21 16:35:00', null, null);
-        insert into discount values('101', '2', 95, '2021-02-21 16:35:00', null, null);
-        insert into discount values('102', '1', 70, '2021-02-21 16:35:00', null, null);
+        insert into discount values('100', '1', 90, '2021-02-21 16:35:00', null);
+        insert into discount values('100', '2', 91, '2020-02-21 16:35:00', null);
+        insert into discount values('101', '1', 84, '2021-02-21 16:35:00', null);
+        insert into discount values('101', '2', 95, '2021-02-21 16:35:00', null);
+        insert into discount values('102', '1', 70, '2021-02-21 16:35:00', null);
         
         insert into order_table values('100', '0', 'Paid','0', 100, '0', '0');
         insert into order_table values('100', '1', 'Paid','0', 80, '1', '0');
