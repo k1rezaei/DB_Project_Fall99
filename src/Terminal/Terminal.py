@@ -14,13 +14,11 @@ def get_first(query: str):
 
 def execute_data_base_query(cursor, connection, query):
     new_query = change(query)
-    #cursor.execute(change(query))
+    cursor.execute(change(query))
     result = []
     if get_first(new_query) == 's' or get_first(new_query) == 'S':
-        cursor.execute(change(query))
         result = cursor.fetchall()
-    else:
-        cursor.execute(change(query))
+
     connection.commit()
     return result
 
