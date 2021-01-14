@@ -61,7 +61,10 @@ class UserView(ViewDefiner):
                         FROM TRAVEL AS T, SEAT AS S 
                         WHERE T.airplaneCode = S.airplaneCode)
                         except
-                        (SELECT travelCode, seatNo, airplaneCode FROM ORDER_TABLE));
+                        (SELECT O.travelCode as travelCode, O.seatNo as seatNo, T.airplaneCode as airplaneCode
+                         FROM ORDER_TABLE as O, TRAVEL as T
+                         WHERE T.code = O.travelCode
+                        ));
                 '''
         self.execute_create_view_query(query, 'TravelEmptySeatUView')
 
