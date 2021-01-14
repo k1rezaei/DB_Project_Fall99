@@ -1,7 +1,7 @@
 def query_discount_set_null(order_no, customer_NC):
     return '''
                 update DISCOUNT 
-                set orderNo = null, customerOrderNC = null
+                set orderNo = null
                 where customerNC = "''' + customer_NC + '''"
                 and orderNo = "''' + order_no + '''"
                 ;
