@@ -5,10 +5,23 @@ from Queries.UserQueries import query_discount_set_null, query_all_future_flight
     query_empty_seats, query_paymet_status, query_discount_percents
 
 
+def get_mex_number(input_str):
+    new_input = []
+    for x in input_str:
+        new_input.append(int(x[0]))
+
+    new_input = sorted(new_input)
+    for i in range(len(new_input)):
+        if i not in new_input:
+            return str(i)
+
+    return str(len(new_input))
+
+
 class UserTerminal(Terminal):
 
     def start(self):
-        Terminal.fancy_print("Welcome!", "Choose one of theese options:"
+        Terminal.fancy_print("Welcome!", "Choose one of these options:"
                              , "[1] Register"
                              , "[2] Login"
                              , "[3] Exit")
@@ -22,7 +35,7 @@ class UserTerminal(Terminal):
             return
 
     def register(self):
-        Terminal.fancy_print('Enter enter your National Code:')
+        Terminal.fancy_print('Enter your National Code:')
         nc = input()
         Terminal.fancy_print('Enter your password:')
         password = input()
@@ -43,7 +56,7 @@ class UserTerminal(Terminal):
         self.user_main()
 
     def login(self):
-        Terminal.fancy_print('Enter enter your National Code:')
+        Terminal.fancy_print('Enter your National Code:')
         nc = input()
         Terminal.fancy_print('Enter your password:')
         password = input()
@@ -58,7 +71,7 @@ class UserTerminal(Terminal):
 
     def user_main(self):
         Terminal.fancy_print("User: " + self.current_NC + "!",
-                             "Choose one of theese options:",
+                             "Choose one of these options:",
                              "[1] Your discounts",
                              "[2] Budget",
                              "[3] Flights",
@@ -105,7 +118,7 @@ class UserTerminal(Terminal):
 
     def budget(self):
         money = self.get_money()
-        Terminal.fancy_print("Your wallet: " + str(money) + "$", "Choose one of theese options:",
+        Terminal.fancy_print("Your wallet: " + str(money) + "$", "Choose one of these options:",
                              "[1] Add money to your wallet (don't worry in this version, it's completely free",
                              "    but PLEASE don't overuse this option)",
                              "[2] Back to main menu")
@@ -136,7 +149,7 @@ class UserTerminal(Terminal):
     def all_flights(self):
         database_query = query_all_future_flights()
 
-        Terminal.fancy_print("Choose one of theese options:",
+        Terminal.fancy_print("Choose one of these options:",
                              "[1] Order by number of empty seats",
                              "[2] Order by airplane score",
                              "[3] Order by ticket price")
@@ -158,7 +171,7 @@ class UserTerminal(Terminal):
             Terminal.fancy_print('No flight to display!')
         else:
             Terminal.table_print(answer, ["code", "time", "startCity", "targetCity", "ticketPrice",
-                                          "airplaneCode", "captainCode","airplaneCode", "avgScore", "emptySeats"])
+                                          "airplaneCode", "captainCode", "airplaneCode", "avgScore", "emptySeats"])
 
     def user_personal_past_flights(self):
         answer = self.execute_database_query(self.query_personal_past_flights())
@@ -168,7 +181,7 @@ class UserTerminal(Terminal):
             Terminal.table_print(answer, ["travelCode", "orderNo", "time", "startingCity", "targetCity",
                                           "ticketPrice", "airplaneCode", "seatNo", "paymentStatus"])
 
-        Terminal.fancy_print("Choose one of theese options:",
+        Terminal.fancy_print("Choose one of these options:",
                              "[1] Score a travel",
                              "[2] Back to main menu")
         query = int(input())
@@ -194,7 +207,7 @@ class UserTerminal(Terminal):
             Terminal.table_print(answer, ["travelCode", "orderNo", "time", "startingCity", "targetCity",
                                           "ticketPrice", "airplaneCode", "seatNo", "paymentStatus"])
 
-        Terminal.fancy_print("Choose one of theese options:",
+        Terminal.fancy_print("Choose one of these options:",
                              "[1] Cancel an order",
                              "[2] Pay a reserved order",
                              "[3] Back to main menu")
@@ -267,7 +280,7 @@ class UserTerminal(Terminal):
             Terminal.fancy_print("Enter seat no:")
             seat_no = input()
 
-            order_no = str(self.execute_database_query(self.query_order_length())[0][0])
+            order_no = get_mex_number(self.execute_database_query(self.query_order_no()))
 
             self.execute_database_query(self.query_insert_order(airplane_code, order_no, seat_no, travel_code))
 
@@ -319,9 +332,9 @@ class UserTerminal(Terminal):
                     self.execute_database_query(self.query_delete_order(order_no))
         return discounts, price
 
-    def query_order_length(self):
+    def query_order_no(self):
         return '''
-                select count(*)
+                select orderNo
                 from order_table
             '''
 
@@ -349,7 +362,11 @@ class UserTerminal(Terminal):
 
     def comment(self):
         Terminal.fancy_print("Enter your comment number:")
-        comment_number = input()
+        comment_number = get_mex_number(self.execute_database_query('''
+            select commentNo
+            from comment;
+        '''))
+
         Terminal.fancy_print("Write your comment:",
                              "End your comment with a line with only a dot")
         comment = [input()]
@@ -359,9 +376,11 @@ class UserTerminal(Terminal):
         comment = comment[:-1]
         # TODO in doroste too postgresql? injori enter mizanan?
         query_comment = ''
-        for c in comment:
+        for i in range(len(comment)):
+            c = comment[i]
+            if i != 0:
+                query_comment += '\\n'
             query_comment += c
-            query_comment += '\\n'
 
         self.execute_database_query(self.query_insert_comment(comment_number, query_comment))
 
