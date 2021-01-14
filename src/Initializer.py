@@ -211,13 +211,13 @@ def insert(cursor):
         insert into discount values('101', '2', 95, '2021-02-21 16:35:00', null);
         insert into discount values('102', '1', 70, '2021-02-21 16:35:00', null);
         
-        insert into order_table values('100', '0', 'Paid','0', 100, '0', '0');
-        insert into order_table values('100', '1', 'Paid','0', 80, '1', '0');
-        insert into order_table values('101', '0', 'Paid','0', 70, '2', '0');
+        insert into order_table values('100', '0', 'Paid','0', 100, '0');
+        insert into order_table values('100', '1', 'Paid','0', 80, '1');
+        insert into order_table values('101', '0', 'Paid','0', 70, '2');
         
-        insert into order_table values('101', '1', 'Paid','1', 60, '0', '1');
-        insert into order_table values('102', '0', 'Paid','1', 100, '1', '1');
-        insert into order_table values('102', '1', 'Paid','1', 50, '2', '1');
+        insert into order_table values('101', '1', 'Paid','1', 60, '0');
+        insert into order_table values('102', '0', 'Paid','1', 100, '1');
+        insert into order_table values('102', '1', 'Paid','1', 50, '2');
         
     ''')
 
