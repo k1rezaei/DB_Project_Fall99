@@ -61,9 +61,14 @@ class Terminal:
 
         format_row = ""
         for l in lens:
-            format_row += '{:>' + str(l + 2) + '}'
+            format_row += '{:' + str(l + 3) + '}'
 
         print(format_row.format(*header))
+        new_row = []
+        for l in lens:
+            new_row.append('-'*l)
 
+        print(format_row.format(*new_row))
         for row in new_table:
             print(format_row.format(*row))
+        print()
