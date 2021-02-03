@@ -14,7 +14,7 @@ def delete_user(cursor):
 
 
 def create_user(cursor):
-    #cursor.execute("CREATE USER customer_user WITH PASSWORD 'userpass';")
+    cursor.execute("CREATE USER customer_user WITH PASSWORD 'userpass';")
     cursor.execute('''
             GRANT ALL PRIVILEGES ON CUSTOMER TO customer_user;
             GRANT ALL PRIVILEGES ON COMMENT TO customer_user;
@@ -249,9 +249,9 @@ if __name__ == '__main__':
         user_view = UserView(cursor)
         manager_view = ManagerView(cursor)
 
-        user_view.drop_all()
-        manager_view.drop_all()
-        drop_tables(cursor)
+        #user_view.drop_all()
+        #manager_view.drop_all()
+        #drop_tables(cursor)
 
         create_tables(cursor)
         user_view.create_all()
