@@ -102,10 +102,12 @@ class ManagerTerminal(Terminal):
                 ManagerQueries.get_add_airplane_query(str(new_code), cap, model, city))
             Terminal.fancy_print("Airplane added successfully!")
 
-            for i in range(cap):
+            '''for i in range(cap):
                 self.execute_database_query('INSERT INTO SEAT VALUES ("' + str(i) + '", "' +
                                             str(new_code) + '")')
-
+'''
+            self.execute_database_query('call add_seats(\''
+                                        + str(new_code) + '\', ' + str(cap) + ')')
         except (Exception, Error) as error:
             print("Error while inserting new airplane", error)
             self.connection.commit()

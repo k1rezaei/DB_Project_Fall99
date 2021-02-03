@@ -222,6 +222,22 @@ def insert(cursor):
     ''')
 
 
+def create_stored_procedure(cursor):
+    cursor.execute('''
+        create or replace procedure add_seats (aCode VARCHAR, numberOfSeats INT)
+        language plpgsql
+        as $$
+        declare x integer:= 0;
+        begin
+        loop
+        exit when x = numberOfSeats; 
+        insert into seat values (x::text , acode);
+        x = x + 1;
+        end loop;
+        END;$$
+    ''')
+
+
 if __name__ == '__main__':
     try:
         connection = psycopg2.connect(user=manager_username,
@@ -243,6 +259,7 @@ if __name__ == '__main__':
         create_user(cursor)
         insert(cursor)
         triggers(cursor)
+        create_stored_procedure(cursor)
 
         connection.commit()
 
