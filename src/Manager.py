@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2 import Error
-from Login import my_database, user_password, manager_password, user_username, manager_username
-from Terminal.Terminal import Terminal
+
+from Login import my_database, manager_password, manager_username
 from Terminal.ManagerTerminal import ManagerTerminal
 
 if __name__ == '__main__':
